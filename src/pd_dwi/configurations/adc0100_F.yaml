@@ -15,7 +15,7 @@ dataset:
 
   mask: DWI MASK
 
-training:
+pipeline:
   features_transformer:
     radiomics:
       imageType:
