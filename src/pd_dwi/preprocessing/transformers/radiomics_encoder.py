@@ -1,9 +1,10 @@
+import logging
 import warnings
 
 import numpy as np
 import pandas as pd
 from numpy import ndarray
-from radiomics import getFeatureClasses
+from radiomics import getFeatureClasses, setVerbosity
 from radiomics.featureextractor import RadiomicsFeatureExtractor
 from sklearn.base import BaseEstimator, TransformerMixin
 
@@ -41,10 +42,8 @@ class RadiomicsEncoder(TransformerMixin, BaseEstimator):
 
                 cfg_radiomics['featureClass'][fc] = []
 
-        # TODO: disable symmetrical GLCM
-        # GLCM is symmetrical, therefore Sum Average = 2 * Joint Average, only 1 needs to be calculated
-
         self.radiomics_extractor = RadiomicsFeatureExtractor(cfg_radiomics)
+        setVerbosity(logging.ERROR)
 
     def fit(self, X, y=None):
         transformed = self.transform(X[:1])
