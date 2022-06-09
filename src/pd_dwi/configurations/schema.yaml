@@ -1,0 +1,77 @@
+type: object
+properties:
+    dataset:
+        type: object
+        properties:
+            labels:
+                type: object
+                properties:
+                    negative:
+                        type: string
+                    positive:
+                        type: string
+                    require_test_labels:
+                        type: boolean
+
+            time_points:
+                type: array
+                items:
+                    enum:
+                        - T0
+                        - T1
+                        - T2
+                minItems: 1
+                uniqueItems: true
+            modalities:
+                type: array
+                minItems: 1
+                uniqueItems: true
+                items:
+                    enum:
+                        - ADC 0100
+                        - F
+                        - ADC 0100600800
+                        - ADC 100600800
+            mask:
+                const: "DWI MASK"
+    pipeline:
+        type: object
+        properties:
+            features_transformer:
+                type: object
+                radiomics:
+                    type: object
+            feature_selection:
+                type: object
+                properties:
+                    k:
+                        type: integer
+                        minimum: 1
+            classifier:
+                type: object
+                properties:
+                    verbosity:
+                        type: integer
+                        minimum: 1
+                    learning_rate:
+                        type: number
+                        minimum: 0
+                    scale_pos_weight:
+                        any_of:
+                            - const: "balanced"
+                            - type: number
+                              minimum: 0
+                    n_estimators:
+                        type: integer
+                        minimum: 1
+                    max_depth:
+                        type: integer
+                        minimum: 1
+                    min_child_weight:
+                        type: number
+                        exclusive_minimum: 0
+                    subsample:
+                        type: number
+                        exclusive_minimum: 0
+                    eval_metric:
+                        const: "auc"
