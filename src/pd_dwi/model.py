@@ -12,7 +12,7 @@ from sklearn.preprocessing import OneHotEncoder
 from xgboost import XGBClassifier
 from yaml import FullLoader, load
 
-from pd_dwi.dataset import create_dataset
+from pd_dwi.dataset import create_dataset, validate_dataset
 from pd_dwi.feature_selection.select_k_best import SelectKBest
 from pd_dwi.preprocessing.column_transformer import ColumnTransformer
 from pd_dwi.preprocessing.transformers.hormone_receptor_encoder import HormoneReceptorEncoder
@@ -119,11 +119,12 @@ class Model(object):
         with open(path, mode='rb') as f:
             return pkl_load(f)
 
-    def train(self, train_dataset_path):
+    def train(self, dataset_path):
         assert self.config is not None
 
         cfg_dataset = self.config['dataset']
-        X_train, y_train = create_dataset(train_dataset_path, cfg_dataset, True)
+        X_train, y_train = create_dataset(dataset_path, cfg_dataset)
+        validate_dataset(X_train, y_train, True)
         balanced_scale_pos_weight = np.sum(y_train == 0) / np.sum(y_train == 1)
 
         model = create_model_from_config(self.config, balanced_scale_pos_weight)
@@ -137,7 +138,8 @@ class Model(object):
         assert self.model is not None
 
         cfg_dataset = self.config['dataset']
-        X, _ = create_dataset(dataset_path, cfg_dataset, False)
+        X, _ = create_dataset(dataset_path, cfg_dataset)
+        validate_dataset(X)
 
         y_pred = self.model.predict(X)
         return pd.Series(y_pred, index=X.index)
@@ -146,7 +148,8 @@ class Model(object):
         assert self.model is not None
 
         cfg_dataset = self.config['dataset']
-        X, _ = create_dataset(dataset_path, cfg_dataset, False)
+        X, _ = create_dataset(dataset_path, cfg_dataset)
+        validate_dataset(X)
 
         y_pred = self.model.predict_proba(X)[:, 1]
         return pd.Series(y_pred, index=X.index)
@@ -160,7 +163,7 @@ class Model(object):
             use_probability = True
 
         cfg_dataset = self.config['dataset']
-        X, y = create_dataset(dataset_path, cfg_dataset, True)
+        X, y = create_dataset(dataset_path, cfg_dataset)
 
         if use_probability:
             y_pred = self.model.predict_proba(X)[:, 1]

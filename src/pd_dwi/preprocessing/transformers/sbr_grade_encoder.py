@@ -3,6 +3,9 @@ from sklearn.base import BaseEstimator, TransformerMixin
 
 
 class SBRGradeEncoder(TransformerMixin, BaseEstimator):
+    """
+    Transforms SBRGrade from categorical feature to ordinal feature
+    """
     _ORDINAL_MAPPING = {'i (low)': 1.0, 'ii (intermediate)': 2.0, 'iii (high)': 3.0}
 
     def __init__(self):

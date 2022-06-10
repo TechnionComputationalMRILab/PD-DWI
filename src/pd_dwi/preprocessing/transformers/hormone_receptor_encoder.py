@@ -2,6 +2,9 @@ from sklearn.base import TransformerMixin, BaseEstimator
 
 
 class HormoneReceptorEncoder(TransformerMixin, BaseEstimator):
+    """
+    Splits HR/HER2 clinical data into two binary features: HR and HER2
+    """
     def __init__(self):
         self.receptors_ = None
 

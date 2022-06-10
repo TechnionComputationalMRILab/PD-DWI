@@ -5,10 +5,10 @@ import numpy as np
 import pandas as pd
 
 
-def create_dataset(dataset_root: str, cfg_dataset, require_labels: bool=True):
+def create_dataset(dataset_root: str, cfg_dataset):
     time_points = cfg_dataset['time_points']
 
-    df_clinical_data = pd.read_csv(os.path.join(dataset_root, 'clinical.csv'), index_col='Patient ID DICOM')\
+    df_clinical_data = pd.read_csv(os.path.join(dataset_root, 'clinical.csv'), index_col='Patient ID DICOM') \
         .replace({np.nan: None})
 
     subjects = {}
@@ -24,12 +24,6 @@ def create_dataset(dataset_root: str, cfg_dataset, require_labels: bool=True):
 
         subject_clinical_data = df_clinical_data.loc[subject_folder_name]
         label = subject_clinical_data['pcr']
-        if label not in [cfg_dataset['labels']['negative'], cfg_dataset['labels']['positive'], None]:
-            raise ValueError(f"Label {label} is not supported  [subject: {subject_folder_name}]. "
-                             f"Please use 'pCR' and 'Non-pCR' values.")
-
-        if require_labels and label is None:
-            raise ValueError(f'Label is unknown [subject: {subject_folder_name}].')
 
         subjects[subject_folder_name]['label'] = label
 
@@ -52,3 +46,23 @@ def create_dataset(dataset_root: str, cfg_dataset, require_labels: bool=True):
     X = df.drop(columns='label')
     y = df['label'].replace({cfg_dataset['labels']['negative']: 0, cfg_dataset['labels']['positive']: 1})
     return X, y
+
+
+def validate_dataset(X: pd.DataFrame, y: pd.Series = None, require_label=False):
+    """ Validates dataset according to expected structure """
+
+    if not isinstance(X, pd.DataFrame):
+        raise ValueError('X must be instance of pd.DataFrame')
+
+    if not require_label:
+        return
+
+    if not isinstance(y, pd.Series):
+        raise ValueError('y must be instance of pd.Series')
+
+    if require_label:
+        if np.sum(y.isnull()) > 0:
+            raise ValueError('All subjects in dataset must have a label')
+
+        if not set(y.unique()).issubset([0, 1]):
+            raise ValueError('Labels must be 0 or 1')

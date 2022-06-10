@@ -12,6 +12,9 @@ setVerbosity(logging.ERROR)
 
 
 class RadiomicsEncoder(TransformerMixin, BaseEstimator):
+    """
+    Extracts radiomic features from input image according to tumour mask
+    """
     def __init__(self, image, mask, cfg_radiomics=None):
         self.image = image
         self.mask = mask
