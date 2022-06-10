@@ -8,6 +8,8 @@ from radiomics import getFeatureClasses, setVerbosity
 from radiomics.featureextractor import RadiomicsFeatureExtractor
 from sklearn.base import BaseEstimator, TransformerMixin
 
+setVerbosity(logging.ERROR)
+
 
 class RadiomicsEncoder(TransformerMixin, BaseEstimator):
     def __init__(self, image, mask, cfg_radiomics=None):
@@ -43,7 +45,6 @@ class RadiomicsEncoder(TransformerMixin, BaseEstimator):
                 cfg_radiomics['featureClass'][fc] = []
 
         self.radiomics_extractor = RadiomicsFeatureExtractor(cfg_radiomics)
-        setVerbosity(logging.ERROR)
 
     def fit(self, X, y=None):
         transformed = self.transform(X[:1])

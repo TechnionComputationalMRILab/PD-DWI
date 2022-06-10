@@ -2,6 +2,7 @@ from itertools import product
 from pickle import dump, load as pkl_load, HIGHEST_PROTOCOL
 
 import numpy as np
+import pandas as pd
 from jsonschema.validators import validate
 from sklearn.feature_selection import f_classif
 from sklearn.metrics import roc_auc_score
@@ -130,13 +131,16 @@ class Model(object):
 
         self.model = model
 
+        return self
+
     def predict(self, dataset_path):
         assert self.model is not None
 
         cfg_dataset = self.config['dataset']
         X, _ = create_dataset(dataset_path, cfg_dataset, False)
 
-        return self.model.predict(X)
+        y_pred = self.model.predict(X)
+        return pd.Series(y_pred, index=X.index)
 
     def predict_proba(self, dataset_path):
         assert self.model is not None
@@ -144,7 +148,8 @@ class Model(object):
         cfg_dataset = self.config['dataset']
         X, _ = create_dataset(dataset_path, cfg_dataset, False)
 
-        return self.model.predict_proba(X)
+        y_pred = self.model.predict_proba(X)[:, 1]
+        return pd.Series(y_pred, index=X.index)
 
     def score(self, dataset_path, f_score=None, use_probability=None):
         assert self.model is not None
@@ -158,7 +163,7 @@ class Model(object):
         X, y = create_dataset(dataset_path, cfg_dataset, True)
 
         if use_probability:
-            y_pred = self.model.predict_proba(X)
+            y_pred = self.model.predict_proba(X)[:, 1]
         else:
             y_pred = self.model.predict(X)
 

@@ -10,21 +10,24 @@ def train(args):
 
 
 def predict(args):
+    if args.out:
+        assert args.out.endswith('.csv')
+
     model = Model.load(args.model)
 
     f_predict = model.predict_proba if args.probability else model.predict
     y_pred = f_predict(args.dataset)
 
     if args.out:
-        with open(args.out, mode='w') as f:
-            f.write(y_pred)
+        y_pred.to_csv(args.out)
     else:
         print(y_pred)
 
 
 def score(args):
     model = Model.load(args.model)
-    model.score(args.dataset)
+    score = model.score(args.dataset)
+    print(f'{score:.4f}')
 
 
 def pd_dwi_cli():
