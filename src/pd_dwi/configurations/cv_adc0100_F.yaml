@@ -2,7 +2,6 @@ dataset:
   labels:
     negative: Non-pCR
     positive: pCR
-    require_test_labels: false
 
   time_points:
     - T0

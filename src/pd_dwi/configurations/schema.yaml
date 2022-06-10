@@ -10,8 +10,6 @@ properties:
                         type: string
                     positive:
                         type: string
-                    require_test_labels:
-                        type: boolean
 
             time_points:
                 type: array
