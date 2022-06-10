@@ -48,10 +48,25 @@ properties:
     grid_search_cv:
         type: object
         properties:
-            classifier:
-                $ref: '#/$defs/xgboost_classifier'
-            feature_selection:
-                $ref: '#/$defs/select_k_best'
+            verbose:
+                type: integer
+                minimum: 1
+            scoring:
+                const: roc_auc
+            cv:
+                type: integer
+                minimum: 1
+#            param_grid:
+#                type: object
+#                properties:
+#                    classifier:
+#                        $ref: '#/$defs/xgboost_classifier'
+#                    feature_selection:
+#                        $ref: '#/$defs/select_k_best'
+        required:
+            - scoring
+            - cv
+#            - param_grid
 
 required:
     - dataset
