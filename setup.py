@@ -7,7 +7,7 @@ with open('requirements.txt', 'r') as fp:
 setup(
     entry_points={
         'console_scripts': [
-            'pd-dwi=pd_dwi.scripts:pd_dwi_cli'
+            'pd-dwi=pd_dwi.scripts.cli:pd_dwi_cli'
         ]
     },
     install_requires=requirements
