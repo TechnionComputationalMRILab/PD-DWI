@@ -1,1 +1,7 @@
-{}
+{
+  "adc0100.pkl": "ADC-0-100-only",
+  "adc0100_F.pkl": "PD-DWI",
+  "adc0100600800.pkl": "ADC-0-800-only",
+  "F.pkl": "F-only",
+  "adc100600800.pkl": "ADC-1000-800-only"
+}

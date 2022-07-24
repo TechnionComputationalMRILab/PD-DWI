@@ -1,5 +1,7 @@
 import logging
+import os
 import warnings
+from multiprocessing import Pool
 
 import numpy as np
 import pandas as pd
@@ -9,6 +11,8 @@ from radiomics.featureextractor import RadiomicsFeatureExtractor
 from sklearn.base import BaseEstimator, TransformerMixin
 
 setVerbosity(logging.ERROR)
+
+RADIOMICS_ENCODER_CORES = int(os.getenv('RE_JOBS', 1))
 
 
 class RadiomicsEncoder(TransformerMixin, BaseEstimator):
@@ -21,6 +25,7 @@ class RadiomicsEncoder(TransformerMixin, BaseEstimator):
         self.radiomics_extractor = None
         self.radiomics_ = None
         self.cfg_radiomics = cfg_radiomics
+        self.num_workers = cfg_radiomics.get('workers')
         self.setup_radiomics_extractor(cfg_radiomics)
 
     def setup_radiomics_extractor(self, cfg_radiomics):
@@ -58,23 +63,39 @@ class RadiomicsEncoder(TransformerMixin, BaseEstimator):
     def transform(self, X: pd.DataFrame):
         assert isinstance(X, pd.DataFrame), 'Input data must be pd.DataFrame'
 
-        def transform_sample(row):
-            features_vector = self.radiomics_extractor.execute(row[self.image], row[self.mask])
-            for key, value in features_vector.items():
-                if isinstance(value, float) or isinstance(value, int):
-                    features_vector[key] = value
-                elif isinstance(value, ndarray) and value.size == 1:
-                    features_vector[key] = value.item()
-                else:
-                    warnings.warn(f"Feature {key} is not numeric, replacing with null", UserWarning)
-                    features_vector[key] = None
+        if (RADIOMICS_ENCODER_CORES > 1) and len(X) > RADIOMICS_ENCODER_CORES:
+            X_transformed = self._parallel_transform(X)
+        else:
+            X_transformed = self._serial_transform(X)
 
-            return pd.Series(features_vector)
-
-        return X.apply(transform_sample, axis=1).replace({np.inf: 1, np.nan: 1})
+        return X_transformed.replace({np.inf: 1, np.nan: 1})
 
     def get_feature_names(self, input_features=None):
         return self.radiomics_
 
     def get_feature_names_out(self, input_features=None):
         return self.radiomics_
+
+    def _transform_sample(self, row):
+        features_vector = self.radiomics_extractor.execute(row[self.image], row[self.mask])
+        for key, value in features_vector.items():
+            if isinstance(value, float) or isinstance(value, int):
+                features_vector[key] = value
+            elif isinstance(value, ndarray) and value.size == 1:
+                features_vector[key] = value.item()
+            else:
+                warnings.warn(f"Feature {key} is not numeric, replacing with null", UserWarning)
+                features_vector[key] = None
+
+        return pd.Series(features_vector)
+
+    def _serial_transform(self, X):
+        return X.apply(self._transform_sample, axis=1)
+
+    def _parallel_transform(self, X):
+        X_split = np.array_split(X, RADIOMICS_ENCODER_CORES)
+        pool = Pool(RADIOMICS_ENCODER_CORES)
+        X_transformed = pd.concat(pool.map(self._serial_transform, X_split))
+        pool.close()
+        pool.join()
+        return X_transformed

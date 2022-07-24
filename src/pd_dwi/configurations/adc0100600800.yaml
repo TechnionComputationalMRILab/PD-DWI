@@ -9,8 +9,7 @@ dataset:
     - T2
 
   modalities:
-    - ADC 0100
-    - F
+    - ADC 0100600800
 
   mask: DWI MASK
 
