@@ -50,9 +50,12 @@ class Model(object):
         model.fit(X_train, y_train)
 
         if isinstance(model, GridSearchCV):
-            self.report_cross_validation(model)
+            self._report_cross_validation(model)
 
         self.model = model
+
+        s = self.score(dataset_path)
+        print(f'Model score: {s:.4f}')
 
         return self
 
@@ -94,7 +97,7 @@ class Model(object):
 
         return f_score(y, y_pred)
 
-    def report_cross_validation(self, model: GridSearchCV):
+    def _report_cross_validation(self, model: GridSearchCV):
         if not hasattr(model, 'best_params_'):
             return
 

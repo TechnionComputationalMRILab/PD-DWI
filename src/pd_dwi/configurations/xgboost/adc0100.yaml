@@ -10,17 +10,25 @@ dataset:
 
   modalities:
     - ADC 0100
-    - F
 
-  mask: DWI MASK
+  masks:
+    - DWI MASK
 
 pipeline:
   features_transformer:
     radiomics:
-      imageType:
-        Original: {}
-      setting:
-        resampledPixelSpacing:  [1.27,1.27,4.0]
+      encoders: # encoder names format is {time point}_{image}
+        - image: ADC 0100
+          mask: DWI MASK
+          time_points:
+            - T0
+            - T1
+            - T2
+      engine:
+        imageType:
+          Original: {}
+        setting:
+          resampledPixelSpacing:  [1.27,1.27,4.0]
   feature_selection:
     k: 100
   classifier:
@@ -29,13 +37,10 @@ pipeline:
       random_state: 42
       use_label_encoder: False
       validate_parameters: True
-      verbosity: 1
       learning_rate: 0.01
       n_estimators: 1000
       max_depth: 20
       min_child_weight: 10
-      subsample: 1
-      eval_metric: auc
 
 grid_search_cv:
   verbose: 3

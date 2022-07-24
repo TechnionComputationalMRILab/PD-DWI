@@ -30,12 +30,18 @@ def load_from_class_string(class_str):
 def create_pipeline_from_config(cfg):
     radiomic_transformers = []
     cfg_radiomics = cfg['pipeline']['features_transformer'].get('radiomics')
-    for tp, modality in product(cfg['dataset']['time_points'], cfg['dataset']['modalities']):
-        modality_col_name = f"{tp}_{modality}".replace(' ', '_')
-        mask_col_name = f"{tp}_{cfg['dataset']['mask']}".replace(' ', '_')
-        radiomic_transformers.append((modality_col_name,
-                                      RadiomicsEncoder(modality_col_name, mask_col_name, cfg_radiomics),
-                                      [modality_col_name, mask_col_name]))
+    if cfg_radiomics:
+        for modality in cfg_radiomics['encoders']:
+            image_name = modality['image']
+            mask_name = modality['mask']
+
+            for time_point in modality['time_points']:
+                image_col_name = f'{time_point} {image_name}'
+                mask_col_name = f'{time_point} {mask_name}'
+                encoder_name = image_col_name.replace(' ', '_')
+                radiomic_transformers.append((encoder_name,
+                                              RadiomicsEncoder(image_col_name, mask_col_name, cfg_radiomics.get('engine')),
+                                              [image_col_name, mask_col_name]))
 
     clinical_transformers = [
         ('hrher', HormoneReceptorEncoder(), ['hrher4g']),
