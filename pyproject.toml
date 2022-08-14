@@ -1,0 +1,37 @@
+[tool.poetry]
+name = "pd-dwi"
+version = "1.0.0"
+description = "Physiologically-Decomposed Diffusion-Weighted MRI machine-learning model for predicting response to neoadjuvant chemotherapy in invasive breast cancer"
+authors = [
+    "Maya Gilad <ms.maya.gilad@gmail.com>"
+]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Development Status :: 4 - Beta"
+]
+readme = "README.md"
+homepage = "https://tcml-bme.github.io/"
+repository = "https://github.com/TechnionComputationalMRILab/PD-DWI"
+
+[tool.poetry.scripts]
+pd-dwi = "pd_dwi.scripts.cli:pd_dwi_cli"
+
+
+[tool.poetry.dependencies]
+python = ">=3.8,<3.11"
+Cython = "^0.29.30"
+jsonschema = "^4.6.0"
+numpy = "^1.21.6"
+pyradiomics = "^3.0.1"
+PyYAML = "^6.0"
+scikit-learn = "^1.0.2"
+xgboost = "^1.6.1"
+pandas = "^1.4.3"
+
+[tool.poetry.dev-dependencies]
+pytest = "^7.1.2"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
