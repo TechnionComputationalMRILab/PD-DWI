@@ -49,8 +49,6 @@ properties:
             verbose:
                 type: integer
                 minimum: 1
-            scoring:
-                const: roc_auc
             cv:
                 type: integer
                 minimum: 1

@@ -9,10 +9,10 @@ dataset:
     - T2
 
   modalities:
-    - ADC 0100
-    - F
+    - ADC 0100600800
 
-  mask: DWI MASK
+  masks:
+    - DWI MASK
 
 pipeline:
   features_transformer:
@@ -24,14 +24,15 @@ pipeline:
   feature_selection:
     k: 100
   classifier:
-    verbosity: 1
-    learning_rate: 0.01
-    scale_pos_weight: balanced
-    n_estimators: 1000
-    max_depth: 20
-    min_child_weight: 10
-    subsample: 1
-    eval_metric: auc
+    module: xgboost.XGBClassifier
+    parameters:
+          random_state: 42
+          use_label_encoder: False
+          validate_parameters: True
+          learning_rate: 0.01
+          n_estimators: 1000
+          max_depth: 20
+          min_child_weight: 10
 
 grid_search_cv:
   verbose: 3
@@ -40,5 +41,4 @@ grid_search_cv:
   param_grid:
     classifier:
       scale_pos_weight:
-        - balanced
-        - 0.5
+        - 2.22 # balanced
