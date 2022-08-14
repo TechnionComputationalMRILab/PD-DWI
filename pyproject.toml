@@ -6,7 +6,9 @@ authors = [
     "Maya Gilad <ms.maya.gilad@gmail.com>"
 ]
 classifiers = [
-    "Programming Language :: Python :: 3"
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Development Status :: 4 - Beta"
 ]
 readme = "README.md"
 homepage = "https://tcml-bme.github.io/"
