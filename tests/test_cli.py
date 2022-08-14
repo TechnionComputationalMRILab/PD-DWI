@@ -1,2 +1,6 @@
+from subprocess import run
+
+
 def test_cli_available():
-    pass
+    p = run(["pd-dwi", "help"])
+    assert not p.returncode
