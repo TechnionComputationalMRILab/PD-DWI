@@ -13,8 +13,8 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["$PYTHON_VERSION"]
-        poetry-version: ["$POETRY_VERSION"]
+        python-version: [ $PYTHON_VERSION ]
+        poetry-version: [ $POETRY_VERSION ]
         os: [ubuntu-latest, macos-latest]
     runs-on: ${{ matrix.os }}
     steps:
@@ -61,8 +61,8 @@ jobs:
         if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags')
         uses: JRubics/poetry-publish@latest
         with:
-          python_version: "$PYTHON_VERSION"
-          poetry_version: "==$POETRY_VERSION"
+          python_version: $PYTHON_VERSION
+          poetry_version: $POETRY_VERSION
           pypi_token: ${{ secrets.TEST_PYPI_API_TOKEN }}
           build_format: "sdist"
           allow_poetry_pre_release: "yes"
