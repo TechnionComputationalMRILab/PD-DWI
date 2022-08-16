@@ -8,7 +8,9 @@ authors = [
 classifiers = [
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.8",
-    "Development Status :: 4 - Beta"
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Development Status :: 4 - Alpha"
 ]
 readme = "README.md"
 homepage = "https://tcml-bme.github.io/"
