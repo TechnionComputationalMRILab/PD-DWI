@@ -1,14 +1,22 @@
 [tool.poetry]
 name = "pd-dwi"
-version = "1.0.0"
+version = "1.0.1-alpha.0"
 description = "Physiologically-Decomposed Diffusion-Weighted MRI machine-learning model for predicting response to neoadjuvant chemotherapy in invasive breast cancer"
 authors = [
     "Maya Gilad <ms.maya.gilad@gmail.com>"
 ]
 classifiers = [
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: BSD License",
+    "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.8",
-    "Development Status :: 4 - Beta"
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Development Status :: 3 - Alpha"
 ]
 readme = "README.md"
 homepage = "https://tcml-bme.github.io/"
