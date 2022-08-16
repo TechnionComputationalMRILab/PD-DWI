@@ -62,7 +62,7 @@ jobs:
           python_version: "3.8"
           poetry_version: "==1.1.11"
           pypi_token: ${{ secrets.TEST_PYPI_API_TOKEN }}
-          build_format: "sdist"
+          build_format: "wheel"
           allow_poetry_pre_release: "yes"
           ignore_dev_requirements: "yes"
           repository_name: "testpypi"

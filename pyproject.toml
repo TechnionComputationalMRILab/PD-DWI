@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pd-dwi"
-version = "1.0.1-alpha.1"
+version = "1.0.1-alpha.2"
 description = "Physiologically-Decomposed Diffusion-Weighted MRI machine-learning model for predicting response to neoadjuvant chemotherapy in invasive breast cancer"
 authors = [
     "Maya Gilad <ms.maya.gilad@gmail.com>"
