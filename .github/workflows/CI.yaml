@@ -47,6 +47,3 @@ jobs:
         with:
           tags: pd-dwi:latest
           push: false
-      - uses: addnab/docker-run-action@v3
-        with:
-          image: pd-dwi:latest
