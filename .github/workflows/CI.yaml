@@ -47,5 +47,8 @@ jobs:
         with:
           context: .
           file: ./Dockerfile
+          tags: pd-dwi:latest
 #          push: true
-#          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/pd-dwi:CLI
+      - uses: addnab/docker-run-action@v3
+        with:
+          image: pd-dwi:latest
