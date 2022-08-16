@@ -21,7 +21,6 @@ classifiers = [
 readme = "README.md"
 homepage = "https://tcml-bme.github.io/"
 repository = "https://github.com/TechnionComputationalMRILab/PD-DWI"
-license = "BSD License"
 
 [tool.poetry.scripts]
 pd-dwi = "pd_dwi.scripts.cli:pd_dwi_cli"
