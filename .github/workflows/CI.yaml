@@ -45,10 +45,8 @@ jobs:
       - name: Build
         uses: docker/build-push-action@v2
         with:
-          context: .
-          file: ./Dockerfile
           tags: pd-dwi:latest
-#          push: true
+          push: false
       - uses: addnab/docker-run-action@v3
         with:
           image: pd-dwi:latest
