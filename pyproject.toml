@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pd-dwi"
-version = "1.0.1-alpha.0"
+version = "1.0.1"
 description = "Physiologically-Decomposed Diffusion-Weighted MRI machine-learning model for predicting response to neoadjuvant chemotherapy in invasive breast cancer"
 authors = [
     "Maya Gilad <ms.maya.gilad@gmail.com>"
@@ -27,7 +27,7 @@ pd-dwi = "pd_dwi.scripts.cli:pd_dwi_cli"
 
 
 [tool.poetry.dependencies]
-python = ">=3.8,<3.11"
+python = ">=3.8,<3.9"
 Cython = "^0.29.30"
 jsonschema = "^4.6.0"
 numpy = "^1.22.0"
