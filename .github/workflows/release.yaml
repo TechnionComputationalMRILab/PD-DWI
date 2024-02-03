@@ -21,5 +21,5 @@ jobs:
           poetry_version: ${{ env.POETRY_VERSION }}
           build_format: "wheel"
           allow_poetry_pre_release: "no"
-          ignore_dev_requirements: "yes"
+          ignore_dev_requirements: "no"
           pypi_token: ${{ secrets.PYPI_API_TOKEN }}

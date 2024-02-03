@@ -21,7 +21,7 @@ jobs:
           poetry_version: ${{ env.POETRY_VERSION }}
           build_format: "wheel"
           allow_poetry_pre_release: "yes"
-          ignore_dev_requirements: "yes"
+          ignore_dev_requirements: "no"
           repository_name: "testpypi"
           repository_url: "https://test.pypi.org/legacy/"
           pypi_token: ${{ secrets.TEST_PYPI_API_TOKEN }}
