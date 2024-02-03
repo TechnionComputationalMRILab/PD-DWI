@@ -14,14 +14,17 @@ jobs:
         with:
           envFile: 'github.env'
           expand: 'true'
-      - name: Build and publish to pypi
-        uses: JRubics/poetry-publish@v1.17
+      - uses: actions/setup-python@v2
         with:
-          python_version: ${{ env.PYTHON_VERSION }}
-          poetry_version: ==${{ env.POETRY_VERSION }}
-          build_format: "wheel"
-          allow_poetry_pre_release: "yes"
-          ignore_dev_requirements: "no"
-          repository_name: "testpypi"
-          repository_url: "https://test.pypi.org/legacy/"
-          pypi_token: ${{ secrets.TEST_PYPI_API_TOKEN }}
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Run image
+        uses: abatilo/actions-poetry@v2.0.0
+        with:
+          poetry-version: ${{ env.POETRY_VERSION }}
+      - name: Build and publish to pypi
+        run: |
+          poetry install --no-dev
+          poetry build --format wheel
+          poetry config pypi-token.testpypi ${{ secrets.TEST_PYPI_API_TOKEN }}
+          poetry config repositories.testpypi https://test.pypi.org/legacy/
+          poetry publish --repository testpypi

@@ -23,3 +23,16 @@ jobs:
           allow_poetry_pre_release: "no"
           ignore_dev_requirements: "no"
           pypi_token: ${{ secrets.PYPI_API_TOKEN }}
+      - uses: actions/setup-python@v2
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - name: Run image
+        uses: abatilo/actions-poetry@v2.0.0
+        with:
+          poetry-version: ${{ env.POETRY_VERSION }}
+      - name: Build and publish to pypi
+        run: |
+          poetry install --no-dev
+          poetry build --format wheel
+          poetry config pypi-token.pypi ${{ secrets.PYPI_API_TOKEN }}
+          poetry publish
