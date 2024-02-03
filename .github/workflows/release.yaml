@@ -14,15 +14,6 @@ jobs:
         with:
           envFile: 'github.env'
           expand: 'true'
-      - name: Build and publish to pypi
-        uses: JRubics/poetry-publish@v1.17
-        with:
-          python_version: ${{ env.PYTHON_VERSION }}
-          poetry_version: ==${{ env.POETRY_VERSION }}
-          build_format: "wheel"
-          allow_poetry_pre_release: "no"
-          ignore_dev_requirements: "no"
-          pypi_token: ${{ secrets.PYPI_API_TOKEN }}
       - uses: actions/setup-python@v2
         with:
           python-version: ${{ env.PYTHON_VERSION }}
