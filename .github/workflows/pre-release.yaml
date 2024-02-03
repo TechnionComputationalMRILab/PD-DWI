@@ -22,7 +22,6 @@ jobs:
         with:
           poetry-version: ${{ env.POETRY_VERSION }}
       - run: pip install urllib3==1.26.15 requests-toolbelt==0.10.1
-
       - name: Build and publish to pypi
         run: |
           poetry install --no-dev
