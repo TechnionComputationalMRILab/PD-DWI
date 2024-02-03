@@ -1,0 +1,27 @@
+name: Publish Pre-Release
+
+on:
+  workflow_dispatch:
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - uses: cardinalby/export-env-action@v2
+        id: cicd_env
+        with:
+          envFile: 'github.env'
+          expand: 'true'
+      - name: Build and publish to pypi
+        uses: JRubics/poetry-publish@v1.17
+        with:
+          python_version: ${{ env.PYTHON_VERSION }}
+          poetry_version: ${{ env.POETRY_VERSION }}
+          build_format: "wheel"
+          allow_poetry_pre_release: "yes"
+          ignore_dev_requirements: "yes"
+          repository_name: "testpypi"
+          repository_url: "https://test.pypi.org/legacy/"
+          pypi_token: ${{ secrets.TEST_PYPI_API_TOKEN }}
