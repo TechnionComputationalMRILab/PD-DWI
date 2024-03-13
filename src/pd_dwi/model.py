@@ -35,8 +35,7 @@ class Model(object):
     def train(self, dataset_path):
         assert self.config is not None
 
-        cfg_dataset = self.config.dataset
-        X_train, y_train = create_dataset(dataset_path, cfg_dataset)
+        X_train, y_train = create_dataset(dataset_path, self.config.dataset)
         validate_dataset(X_train, y_train, True)
 
         model = create_model_from_config(self.config)

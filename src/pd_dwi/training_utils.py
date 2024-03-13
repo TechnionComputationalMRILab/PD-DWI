@@ -3,6 +3,7 @@ from importlib import import_module
 from sklearn.model_selection import GridSearchCV
 from sklearn.pipeline import Pipeline
 
+from pd_dwi.config.config import ModelConfig
 from pd_dwi.feature_selection.select_k_best import SelectKBest
 from sklearn.feature_selection import f_classif
 
@@ -26,20 +27,20 @@ def load_from_class_string(class_str):
         raise ImportError(class_str)
 
 
-def create_pipeline_from_config(cfg):
+def create_pipeline_from_config(cfg: ModelConfig):
     radiomic_transformers = []
-    cfg_radiomics = cfg['pipeline']['features_transformer'].get('radiomics')
+    cfg_radiomics = cfg.pipeline.features_transformer.radiomics
     if cfg_radiomics:
-        for modality in cfg_radiomics['encoders']:
-            image_name = modality['image']
-            mask_name = modality['mask']
+        for modality in cfg_radiomics.encoders:
+            image_name = modality.image
+            mask_name = modality.mask
 
-            for time_point in modality['time_points']:
+            for time_point in modality.time_points:
                 image_col_name = f'{time_point} {image_name}'
                 mask_col_name = f'{time_point} {mask_name}'
                 encoder_name = image_col_name.replace(' ', '_')
                 radiomic_transformers.append((encoder_name,
-                                              RadiomicsEncoder(image_col_name, mask_col_name, cfg_radiomics.get('engine')),
+                                              RadiomicsEncoder(image_col_name, mask_col_name, cfg_radiomics.engine),
                                               [image_col_name, mask_col_name]))
 
     clinical_transformers = [
@@ -53,15 +54,15 @@ def create_pipeline_from_config(cfg):
         remainder='drop'
     )
 
-    cfg_feature_selection = cfg['pipeline'].get('feature_selection')
+    cfg_feature_selection = cfg.pipeline.feature_selection
     if cfg_feature_selection is None:
         features_selection = SelectKBest(f_classif)
     else:
         features_selection = SelectKBest(f_classif, k=cfg_feature_selection['k'])
 
-    cfg_classifier = cfg['pipeline']['classifier']
+    cfg_classifier = cfg.pipeline.classifier
 
-    classifier = load_from_class_string(cfg_classifier['module'])(**cfg_classifier.get('parameters', {}))
+    classifier = load_from_class_string(cfg_classifier.module)(**cfg_classifier.parameters)
 
     pipeline = Pipeline(
         steps=[
@@ -74,18 +75,19 @@ def create_pipeline_from_config(cfg):
     return pipeline
 
 
-def create_model_from_config(cfg):
+def create_model_from_config(cfg: ModelConfig):
     pipeline = create_pipeline_from_config(cfg)
 
-    cfg_grid_search_cv = cfg.get('grid_search_cv')
+    cfg_grid_search_cv = cfg.grid_search_cv
     if cfg_grid_search_cv is None:
         return pipeline
 
     param_grid = {}
-    for step_name, step_parameters in cfg_grid_search_cv['param_grid'].items():
+    for step_name, step_parameters in cfg_grid_search_cv.param_grid.dict():
+        if not step_parameters:
+            continue
+
         for parameter_name, values in step_parameters.items():
             param_grid[f'{step_name}__{parameter_name}'] = values
 
-    del cfg_grid_search_cv['param_grid']
-
-    return GridSearchCV(pipeline, param_grid, **cfg_grid_search_cv)
+    return GridSearchCV(pipeline, param_grid, **cfg_grid_search_cv.dict(exclude={'param_grid'}))

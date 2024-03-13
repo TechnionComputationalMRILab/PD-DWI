@@ -45,11 +45,11 @@ class RadiomicsFeaturesEncoder(BaseModel):
 
 class RadiomicsFeaturesTransformer(BaseModel):
     encoders: List[RadiomicsFeaturesEncoder]
-    engine: Dict[str, Any]
+    engine: Dict[str, Any] = None
 
 
 class FeatureTransformer(BaseModel):
-    radiomics: RadiomicsFeaturesTransformer
+    radiomics: RadiomicsFeaturesTransformer = None
 
 
 class FeatureSelection(BaseModel):
