@@ -14,6 +14,11 @@ def test_list():
     pd_dwi_cli(["list"])
 
 
+def test_invalid_command():
+    with pytest.raises(SystemExit):
+        pd_dwi_cli(["cmd"])
+
+
 def test_predict(subtests):
     with subtests.test("missing arguments"):
         with pytest.raises(SystemExit):
