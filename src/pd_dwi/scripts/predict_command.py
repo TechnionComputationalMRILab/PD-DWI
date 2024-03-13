@@ -30,8 +30,8 @@ def predict(args):
 
 
 def add_predict_parser(parser):
-    parser.add_argument('-model', type=str)
-    parser.add_argument('-dataset', type=str)
-    parser.add_argument('-probability', action='store_true')
-    parser.add_argument('-out', type=str)
+    parser.add_argument('-model', type=str, required=True, help="Path for model name to load")
+    parser.add_argument('-dataset', type=str, required=True, help="Path for dataset to use")
+    parser.add_argument('-probability', action='store_true', help="Should retrieve prediction probability")
+    parser.add_argument('-out', type=str, required=True, help="Path for prediction results file")
     parser.set_defaults(func=predict)

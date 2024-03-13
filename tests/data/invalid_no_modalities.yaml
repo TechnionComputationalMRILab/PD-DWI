@@ -8,16 +8,20 @@ dataset:
     - T1
     - T2
 
-  modalities:
-    - ADC 100600800
-
   masks:
     - DWI MASK
 
 pipeline:
   features_transformer:
+    radiomics:
       encoders: # encoder names format is {time point}_{image}
-        - image: ADC 100600800
+        - image: ADC 0100
+          mask: DWI MASK
+          time_points:
+            - T0
+            - T1
+            - T2
+        - image: F
           mask: DWI MASK
           time_points:
             - T0
@@ -25,21 +29,21 @@ pipeline:
             - T2
       engine:
         imageType:
-          Original: {}
+          Original: { }
         setting:
-          resampledPixelSpacing:  [1.27,1.27,4.0]
+          resampledPixelSpacing: [ 1.27,1.27,4.0 ]
   feature_selection:
     k: 100
   classifier:
-    module: xgboost.XGBClassifier
+    module: samples.XGBClassifier
     parameters:
-          random_state: 42
-          use_label_encoder: False
-          validate_parameters: True
-          learning_rate: 0.01
-          n_estimators: 1000
-          max_depth: 20
-          min_child_weight: 10
+      random_state: 42
+      use_label_encoder: False
+      validate_parameters: True
+      learning_rate: 0.01
+      n_estimators: 1000
+      max_depth: 20
+      min_child_weight: 10
 
 grid_search_cv:
   verbose: 3

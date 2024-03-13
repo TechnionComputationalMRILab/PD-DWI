@@ -1,11 +1,15 @@
+from pathlib import Path
 from pickle import dump, load as pkl_load, HIGHEST_PROTOCOL
 
 import pandas as pd
 from jsonschema.validators import validate
+from pydantic_yaml import parse_yaml_raw_as
 from sklearn.metrics import roc_auc_score
 from sklearn.model_selection import GridSearchCV
 from yaml import FullLoader, load
 
+from pd_dwi.config.config import ModelConfig
+from pd_dwi.config.utils import read_config
 from pd_dwi.dataset import create_dataset, validate_dataset
 from pd_dwi.training_utils import create_model_from_config
 
@@ -17,14 +21,7 @@ class Model(object):
 
     @classmethod
     def from_config(cls, config):
-        if hasattr(config, 'read'):
-            config = load(config, Loader=FullLoader)
-        elif not isinstance(config, dict):
-            raise NotImplementedError()
-
-        validate(instance=config, schema=load(open('./configurations/schema.yaml'), Loader=FullLoader))
-
-        return cls(config=config)
+        return cls(config=read_config(config))
 
     def save(self, path):
         assert self.model is not None
