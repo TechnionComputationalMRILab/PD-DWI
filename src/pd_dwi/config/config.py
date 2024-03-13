@@ -96,4 +96,11 @@ class ModelConfig(BaseModel):
         if not masks.issubset(self.dataset.masks):
             raise ValueError("Encoders contain masks that are not available in dataset")
 
+        time_points = self.pipeline.features_transformer.radiomics.encoders[0].time_points
+        for e in self.pipeline.features_transformer.radiomics.encoders[1:]:
+            time_points = time_points.union(e.time_points)
+
+        if not time_points.issubset(self.dataset.time_points):
+            raise ValueError("Encoders contain time points that are not available in dataset")
+
         return self

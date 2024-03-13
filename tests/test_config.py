@@ -20,7 +20,8 @@ def test_from_config_valid():
     'config_name,validation_msg',
     [
         ('invalid_no_modalities', 'Field required'),
-        ('invalid_encoders_bad_modality', 'Value error, Encoders contain modalities that are not available in dataset')
+        ('invalid_encoders_bad_modality', 'Value error, Encoders contain modalities that are not available in dataset'),
+        ('invalid_encoders_bad_time_points', 'Value error, Encoders contain time points that are not available in dataset')
     ]
 )
 def test_from_config_invalid(config_name, validation_msg):
