@@ -1,4 +1,3 @@
-from argparse import ArgumentError
 from subprocess import run
 
 import pytest
@@ -13,9 +12,9 @@ def test_cli_available():
 
 def test_list():
     pd_dwi_cli(["list"])
-    
+
 
 def test_predict(subtests):
     with subtests.test("missing arguments"):
-        with pytest.raises(TypeError):
+        with pytest.raises(SystemExit):
             pd_dwi_cli(["predict"])
