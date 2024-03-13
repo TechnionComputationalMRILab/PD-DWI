@@ -28,15 +28,15 @@ class Mask(Enum):
 
 class Dataset(BaseModel):
     labels: Labels
-    time_points: Set[TimePoint] = Field(min_items=1)
-    modalities: Set[Modality] = Field(min_items=1)
+    time_points: Set[TimePoint] = Field(min_length=1)
+    modalities: Set[Modality] = Field(min_length=1)
     masks: Set[Mask]
 
 
 class RadiomicsFeaturesEncoder(BaseModel):
     image: Modality
     mask: Mask
-    time_points: Set[TimePoint] = Field(min_items=1)
+    time_points: Set[TimePoint] = Field(min_length=1)
 
 
 class RadiomicsFeaturesTransformer(BaseModel):
