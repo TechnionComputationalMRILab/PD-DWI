@@ -36,10 +36,13 @@ PyYAML = "^6.0"
 scikit-learn = "^1.0.2"
 xgboost = "^1.6.1"
 pandas = "^1.4.3"
+pydantic = "^2.6.4"
+pydantic-yaml = "^1.2.1"
 
 [tool.poetry.dev-dependencies]
 pytest = "7.1.2"
 pytest-cov = "^4.1.0"
+pytest-subtests = "^0.12.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
