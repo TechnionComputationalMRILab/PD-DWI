@@ -1,12 +1,8 @@
-from pathlib import Path
 from pickle import dump, load as pkl_load, HIGHEST_PROTOCOL
 
 import pandas as pd
-from jsonschema.validators import validate
-from pydantic_yaml import parse_yaml_raw_as
 from sklearn.metrics import roc_auc_score
 from sklearn.model_selection import GridSearchCV
-from yaml import FullLoader, load
 
 from pd_dwi.config.config import ModelConfig
 from pd_dwi.config.utils import read_config
@@ -16,7 +12,7 @@ from pd_dwi.training_utils import create_model_from_config
 
 class Model(object):
     def __init__(self, config=None, model_obj=None):
-        self.config = config
+        self.config: ModelConfig = config
         self.model = model_obj
 
     @classmethod
@@ -39,7 +35,7 @@ class Model(object):
     def train(self, dataset_path):
         assert self.config is not None
 
-        cfg_dataset = self.config['dataset']
+        cfg_dataset = self.config.dataset
         X_train, y_train = create_dataset(dataset_path, cfg_dataset)
         validate_dataset(X_train, y_train, True)
 

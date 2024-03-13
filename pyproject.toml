@@ -38,6 +38,7 @@ xgboost = "^1.6.1"
 pandas = "^1.4.3"
 pydantic = "^2.6.4"
 pydantic-yaml = "^1.2.1"
+StrEnum = {version = "^0.4.15", python = "<3.11"}
 
 [tool.poetry.dev-dependencies]
 pytest = "7.1.2"

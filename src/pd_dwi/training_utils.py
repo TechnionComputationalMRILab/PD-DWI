@@ -1,5 +1,4 @@
 from importlib import import_module
-from itertools import product
 
 from sklearn.model_selection import GridSearchCV
 from sklearn.pipeline import Pipeline

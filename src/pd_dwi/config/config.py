@@ -1,7 +1,11 @@
-from enum import Enum
-from typing import List, Dict, Any, Optional, Set
+try:
+    from enum import StrEnum
+except ImportError:
+    from strenum import StrEnum
 
-from pydantic import BaseModel, Field, PositiveInt, NonNegativeInt, root_validator, model_validator
+from typing import List, Dict, Any, Set
+
+from pydantic import BaseModel, Field, PositiveInt, NonNegativeInt, model_validator
 
 
 class Labels(BaseModel):
@@ -9,20 +13,20 @@ class Labels(BaseModel):
     positive: str = Field(min_length=1)
 
 
-class TimePoint(Enum):
+class TimePoint(StrEnum):
     T0 = 'T0'
     T1 = 'T1'
     T2 = 'T2'
 
 
-class Modality(Enum):
+class Modality(StrEnum):
     ADC0100 = 'ADC 0100'
     ADC0100600800 = 'ADC 0100600800'
     ADC100600800 = 'ADC 100600800'
     F = 'F'
 
 
-class Mask(Enum):
+class Mask(StrEnum):
     DWI = 'DWI MASK'
 
 

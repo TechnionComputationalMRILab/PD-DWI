@@ -4,8 +4,10 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
+from pd_dwi.config.config import Dataset
 
-def create_dataset(dataset_root: str, cfg_dataset):
+
+def create_dataset(dataset_root: str, cfg_dataset: Dataset):
     df_clinical_data = pd.read_csv(os.path.join(dataset_root, 'clinical.csv'), index_col='Patient ID DICOM') \
         .replace({np.nan: None})
 
@@ -28,12 +30,12 @@ def create_dataset(dataset_root: str, cfg_dataset):
         for clinical_col in ['hrher4g', 'SBRgrade', 'race', 'Ltype']:
             subjects[subject_folder_name][clinical_col] = subject_clinical_data[clinical_col]
 
-        for tp in cfg_dataset['time_points']:
+        for tp in cfg_dataset.time_points:
             tp_path = os.path.join(subject_path, tp)
             if not os.path.exists:
                 raise FileNotFoundError(f'Could not find {tp} [subject: {subject_folder_name}].')
 
-            for image_name in cfg_dataset['modalities'] + cfg_dataset['masks']:
+            for image_name in cfg_dataset.modalities.union(cfg_dataset.masks):
                 file_path = os.path.join(tp_path, f'{image_name}.dcm')
                 if not os.path.exists(file_path):
                     raise FileNotFoundError(f'{image_name}.dcm is not found [subject: {subject_folder_name}]')
@@ -42,7 +44,7 @@ def create_dataset(dataset_root: str, cfg_dataset):
     df = pd.DataFrame.from_dict(subjects, orient='index')
 
     X = df.drop(columns='label')
-    y = df['label'].replace({cfg_dataset['labels']['negative']: 0, cfg_dataset['labels']['positive']: 1})
+    y = df['label'].replace({cfg_dataset.labels.negative: 0, cfg_dataset.labels.positive: 1})
     return X, y
 
 
