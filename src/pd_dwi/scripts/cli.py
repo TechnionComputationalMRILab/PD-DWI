@@ -6,7 +6,7 @@ from pd_dwi.scripts.score_command import add_score_parser
 from pd_dwi.scripts.train_command import add_train_parser
 
 
-def pd_dwi_cli():
+def pd_dwi_cli(args=None):
     parser = argparse.ArgumentParser()
     subparsers = parser.add_subparsers(dest='cmd', required=True)
 
@@ -15,7 +15,7 @@ def pd_dwi_cli():
     add_score_parser(subparsers.add_parser('score'))
     add_list_parser(subparsers.add_parser('list'))
 
-    args = parser.parse_args()
+    args = parser.parse_args(args)
     args.func(args)
 
 

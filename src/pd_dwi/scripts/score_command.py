@@ -7,6 +7,6 @@ def score(args):
 
 
 def add_score_parser(parser):
-    parser.add_argument('-model', type=str)
-    parser.add_argument('-dataset', type=str)
+    parser.add_argument('-model', type=str, required=True, help="Path for model name to load")
+    parser.add_argument('-dataset', type=str, required=True, help="Path for dataset to use")
     parser.set_defaults(func=score)
