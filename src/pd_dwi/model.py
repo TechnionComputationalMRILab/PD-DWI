@@ -1,4 +1,5 @@
 from pickle import dump, load as pkl_load, HIGHEST_PROTOCOL
+from typing import Optional
 
 import pandas as pd
 from sklearn.metrics import roc_auc_score
@@ -11,8 +12,8 @@ from pd_dwi.training_utils import create_model_from_config
 
 
 class Model(object):
-    def __init__(self, config=None, model_obj=None):
-        self.config: ModelConfig = config
+    def __init__(self, config: Optional[ModelConfig] = None, model_obj=None):
+        self.config: Optional[ModelConfig] = config
         self.model = model_obj
 
     @classmethod

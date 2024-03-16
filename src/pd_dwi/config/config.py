@@ -1,9 +1,9 @@
 try:
-    from enum import StrEnum
+    from enum import StrEnum  # type: ignore
 except ImportError:
     from strenum import StrEnum
 
-from typing import List, Dict, Any, Set
+from typing import List, Dict, Any, Set, Optional
 
 from pydantic import BaseModel, Field, PositiveInt, NonNegativeInt, model_validator
 
@@ -45,11 +45,11 @@ class RadiomicsFeaturesEncoder(BaseModel):
 
 class RadiomicsFeaturesTransformer(BaseModel):
     encoders: List[RadiomicsFeaturesEncoder]
-    engine: Dict[str, Any] = None
+    engine: Optional[Dict[str, Any]] = None
 
 
 class FeatureTransformer(BaseModel):
-    radiomics: RadiomicsFeaturesTransformer = None
+    radiomics: Optional[RadiomicsFeaturesTransformer] = None
 
 
 class FeatureSelection(BaseModel):
@@ -68,8 +68,8 @@ class Pipeline(BaseModel):
 
 
 class GridSearchParamGrid(BaseModel):
-    classifier: Dict[str, Any] = None
-    feature_selection: Dict[str, Any] = None
+    classifier: Optional[Dict[str, Any]] = None
+    feature_selection: Optional[Dict[str, Any]] = None
 
 
 class GridSearch(BaseModel):
@@ -82,7 +82,7 @@ class GridSearch(BaseModel):
 class ModelConfig(BaseModel):
     dataset: Dataset
     pipeline: Pipeline
-    grid_search_cv: GridSearch = None
+    grid_search_cv: Optional[GridSearch] = None
 
     class Config:
         frozen = True

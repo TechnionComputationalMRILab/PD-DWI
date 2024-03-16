@@ -1,5 +1,6 @@
 import os
 from pathlib import Path
+from typing import Dict
 
 import numpy as np
 import pandas as pd
@@ -11,7 +12,7 @@ def create_dataset(dataset_root: str, cfg_dataset: Dataset):
     df_clinical_data = pd.read_csv(os.path.join(dataset_root, 'clinical.csv'), index_col='Patient ID DICOM') \
         .replace({np.nan: None})
 
-    subjects = {}
+    subjects: Dict[str, Dict[str, str]] = {}
     for subject_folder_name in os.listdir(dataset_root):
         if subject_folder_name == 'ACRIN-6698-688291':
             continue
@@ -32,7 +33,7 @@ def create_dataset(dataset_root: str, cfg_dataset: Dataset):
 
         for tp in cfg_dataset.time_points:
             tp_path = os.path.join(subject_path, tp)
-            if not os.path.exists:
+            if not os.path.exists(tp_path):
                 raise FileNotFoundError(f'Could not find {tp} [subject: {subject_folder_name}].')
 
             for image_name in cfg_dataset.modalities.union(cfg_dataset.masks):

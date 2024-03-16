@@ -58,7 +58,7 @@ def create_pipeline_from_config(cfg: ModelConfig):
     if cfg_feature_selection is None:
         features_selection = SelectKBest(f_classif)
     else:
-        features_selection = SelectKBest(f_classif, k=cfg_feature_selection['k'])
+        features_selection = SelectKBest(f_classif, k=cfg_feature_selection.k)
 
     cfg_classifier = cfg.pipeline.classifier
 
@@ -83,7 +83,7 @@ def create_model_from_config(cfg: ModelConfig):
         return pipeline
 
     param_grid = {}
-    for step_name, step_parameters in cfg_grid_search_cv.param_grid.dict():
+    for step_name, step_parameters in cfg_grid_search_cv.param_grid.dict().items():
         if not step_parameters:
             continue
 
