@@ -3,13 +3,15 @@ import tempfile
 import pandas as pd
 import pytest
 
+from pd_dwi.model import Model
+
 
 @pytest.mark.parametrize("test_data", ["valid"], indirect=["test_data"])
 def test_save_and_load(test_data, mocker):
     X = pd.DataFrame()
     y = pd.Series()
 
-    create_dataset_mock = mocker.patch('pd_dwi.dataset.create_dataset')
+    create_dataset_mock = mocker.patch('pd_dwi.model.create_dataset')
     create_dataset_mock.return_value = (X, y)
 
     xgboost_fit_mock = mocker.patch('sklearn.model_selection.GridSearchCV.fit')
@@ -17,8 +19,6 @@ def test_save_and_load(test_data, mocker):
 
     score_mock = mocker.patch('pd_dwi.model.Model.score')
     score_mock.return_value = None
-
-    from pd_dwi.model import Model
 
     model = Model.from_config(test_data)
     model.train('some_fake_path')
