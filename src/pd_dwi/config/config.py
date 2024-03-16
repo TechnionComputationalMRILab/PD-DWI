@@ -5,7 +5,7 @@ except ImportError:
 
 from typing import List, Dict, Any, Set, Optional
 
-from pydantic import BaseModel, Field, PositiveInt, NonNegativeInt, model_validator
+from pydantic import BaseModel, Field, PositiveInt, NonNegativeInt, model_validator, ConfigDict
 
 
 class Labels(BaseModel):
@@ -80,13 +80,11 @@ class GridSearch(BaseModel):
 
 
 class ModelConfig(BaseModel):
+    model_config = ConfigDict(frozen=True, extra='forbid')
+
     dataset: Dataset
     pipeline: Pipeline
     grid_search_cv: Optional[GridSearch] = None
-
-    class Config:
-        frozen = True
-        extra = 'forbid'
 
     @model_validator(mode='after')
     def validate_encoders_dataset(self) -> 'ModelConfig':
