@@ -1,9 +1,10 @@
 from pickle import dump, load as pkl_load, HIGHEST_PROTOCOL
-from typing import Optional, Callable
+from typing import Optional, Callable, Union, TextIO
 
 import pandas as pd
 from sklearn.metrics import roc_auc_score
 from sklearn.model_selection import GridSearchCV
+from sklearn.pipeline import Pipeline
 
 from pd_dwi.config.config import ModelConfig
 from pd_dwi.config.utils import read_config
@@ -12,12 +13,12 @@ from pd_dwi.training_utils import create_model_from_config
 
 
 class Model(object):
-    def __init__(self, config: Optional[ModelConfig] = None, model_obj=None) -> None:
-        self.config: Optional[ModelConfig] = config
+    def __init__(self, config: ModelConfig, model_obj: Optional[Union[GridSearchCV, Pipeline]] = None) -> None:
+        self.config: ModelConfig = config
         self.model = model_obj
 
     @classmethod
-    def from_config(cls, config) -> 'Model':
+    def from_config(cls, config: Union[str, TextIO]) -> 'Model':
         return cls(config=read_config(config))
 
     def save(self, path: str) -> None:

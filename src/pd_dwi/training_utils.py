@@ -1,5 +1,5 @@
 from importlib import import_module
-from typing import Union
+from typing import Union, Any
 
 from sklearn.model_selection import GridSearchCV
 from sklearn.pipeline import Pipeline
@@ -18,7 +18,7 @@ from pd_dwi.preprocessing.transformers.hormone_receptor_encoder import HormoneRe
 from pd_dwi.preprocessing.transformers.radiomics_encoder import RadiomicsEncoder
 
 
-def load_from_class_string(class_str: str):
+def load_from_class_string(class_str: str) -> Any:
     """ Loads class from class string """
     try:
         module_path, class_name = class_str.rsplit('.', 1)
