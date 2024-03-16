@@ -2,6 +2,7 @@ import logging
 import os
 import warnings
 from multiprocessing import Pool
+from typing import Optional, Dict, Any, List
 
 import numpy as np
 import pandas as pd
@@ -19,19 +20,15 @@ class RadiomicsEncoder(TransformerMixin, BaseEstimator):
     """
     Extracts radiomic features from input image according to tumour mask
     """
-    def __init__(self, image, mask, cfg_radiomics=None):
+
+    def __init__(self, image: str, mask: str, cfg_radiomics: Optional[Dict[str, Any]] = None) -> None:
         self.image = image
         self.mask = mask
-        self.radiomics_extractor = None
-        self.radiomics_ = None
-        self.cfg_radiomics = cfg_radiomics
-        self.num_workers = cfg_radiomics.get('workers')
-        self.setup_radiomics_extractor(cfg_radiomics)
+        self.radiomics_: List[str] = []
+        self.cfg_radiomics = cfg_radiomics or {}
+        self.radiomics_extractor = self.setup_radiomics_extractor(self.cfg_radiomics)
 
-    def setup_radiomics_extractor(self, cfg_radiomics):
-        if cfg_radiomics is None:
-            cfg_radiomics = dict()
-
+    def setup_radiomics_extractor(self, cfg_radiomics: Dict[str, Any]) -> RadiomicsFeatureExtractor:
         settings = cfg_radiomics.get('setting', {})
         settings['additionalInfo'] = False
 
@@ -52,15 +49,15 @@ class RadiomicsEncoder(TransformerMixin, BaseEstimator):
 
                 cfg_radiomics['featureClass'][fc] = []
 
-        self.radiomics_extractor = RadiomicsFeatureExtractor(cfg_radiomics)
+        return RadiomicsFeatureExtractor(cfg_radiomics)
 
-    def fit(self, X, y=None):
+    def fit(self, X: pd.DataFrame, y: Optional[pd.Series] = None) -> 'RadiomicsEncoder':
         transformed = self.transform(X[:1])
         self.radiomics_ = list(transformed.columns)
 
         return self
 
-    def transform(self, X: pd.DataFrame):
+    def transform(self, X: pd.DataFrame) -> pd.DataFrame:
         assert isinstance(X, pd.DataFrame), 'Input data must be pd.DataFrame'
 
         if (RADIOMICS_ENCODER_CORES > 1) and len(X) > RADIOMICS_ENCODER_CORES:
@@ -70,13 +67,13 @@ class RadiomicsEncoder(TransformerMixin, BaseEstimator):
 
         return X_transformed.replace({np.inf: 1, np.nan: 1})
 
-    def get_feature_names(self, input_features=None):
+    def get_feature_names(self, input_features: Optional[Any] = None) -> List[str]:
         return self.radiomics_
 
-    def get_feature_names_out(self, input_features=None):
+    def get_feature_names_out(self, input_features: Optional[Any] = None) -> List[str]:
         return self.radiomics_
 
-    def _transform_sample(self, row):
+    def _transform_sample(self, row: pd.Series) -> pd.Series:
         features_vector = self.radiomics_extractor.execute(row[self.image], row[self.mask])
         for key, value in features_vector.items():
             if isinstance(value, float) or isinstance(value, int):
@@ -89,10 +86,10 @@ class RadiomicsEncoder(TransformerMixin, BaseEstimator):
 
         return pd.Series(features_vector)
 
-    def _serial_transform(self, X):
+    def _serial_transform(self, X: pd.DataFrame) -> pd.DataFrame:
         return X.apply(self._transform_sample, axis=1)
 
-    def _parallel_transform(self, X):
+    def _parallel_transform(self, X: pd.DataFrame) -> pd.DataFrame:
         X_split = np.array_split(X, RADIOMICS_ENCODER_CORES)
         pool = Pool(RADIOMICS_ENCODER_CORES)
         X_transformed = pd.concat(pool.map(self._serial_transform, X_split))

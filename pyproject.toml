@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pd-dwi"
-version = "1.0.2"
+version = "1.0.3"
 description = "Physiologically-Decomposed Diffusion-Weighted MRI machine-learning model for predicting response to neoadjuvant chemotherapy in invasive breast cancer"
 authors = [
     "Maya Gilad <ms.maya.gilad@gmail.com>"
@@ -38,11 +38,25 @@ xgboost = "^1.6.1"
 pandas = "^1.4.3"
 pydantic = "^2.6.4"
 pydantic-yaml = "^1.2.1"
+StrEnum = {version = "^0.4.15", python = "<3.11"}
 
 [tool.poetry.dev-dependencies]
 pytest = "7.1.2"
 pytest-cov = "^4.1.0"
 pytest-subtests = "^0.12.1"
+mypy = "^1.9.0"
+types-PyYAML = "^6.0.12"
+pytest-mock = "^3.12.0"
+
+[tool.mypy]
+python_version = "3.8"
+ignore_missing_imports = true
+disallow_untyped_defs = true
+
+[[tool.mypy.overrides]]
+module = "pd_dwi.scripts.*"
+disallow_untyped_defs = false
+
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]

@@ -1,15 +1,18 @@
 import os
 from pathlib import Path
+from typing import Dict, Tuple, Optional
 
 import numpy as np
 import pandas as pd
 
+from pd_dwi.config.config import Dataset
 
-def create_dataset(dataset_root: str, cfg_dataset):
+
+def create_dataset(dataset_root: str, cfg_dataset: Dataset) -> Tuple[pd.DataFrame, pd.Series]:
     df_clinical_data = pd.read_csv(os.path.join(dataset_root, 'clinical.csv'), index_col='Patient ID DICOM') \
         .replace({np.nan: None})
 
-    subjects = {}
+    subjects: Dict[str, Dict[str, str]] = {}
     for subject_folder_name in os.listdir(dataset_root):
         if subject_folder_name == 'ACRIN-6698-688291':
             continue
@@ -28,12 +31,12 @@ def create_dataset(dataset_root: str, cfg_dataset):
         for clinical_col in ['hrher4g', 'SBRgrade', 'race', 'Ltype']:
             subjects[subject_folder_name][clinical_col] = subject_clinical_data[clinical_col]
 
-        for tp in cfg_dataset['time_points']:
+        for tp in cfg_dataset.time_points:
             tp_path = os.path.join(subject_path, tp)
-            if not os.path.exists:
+            if not os.path.exists(tp_path):
                 raise FileNotFoundError(f'Could not find {tp} [subject: {subject_folder_name}].')
 
-            for image_name in cfg_dataset['modalities'] + cfg_dataset['masks']:
+            for image_name in cfg_dataset.modalities.union(cfg_dataset.masks):
                 file_path = os.path.join(tp_path, f'{image_name}.dcm')
                 if not os.path.exists(file_path):
                     raise FileNotFoundError(f'{image_name}.dcm is not found [subject: {subject_folder_name}]')
@@ -42,11 +45,11 @@ def create_dataset(dataset_root: str, cfg_dataset):
     df = pd.DataFrame.from_dict(subjects, orient='index')
 
     X = df.drop(columns='label')
-    y = df['label'].replace({cfg_dataset['labels']['negative']: 0, cfg_dataset['labels']['positive']: 1})
+    y = df['label'].replace({cfg_dataset.labels.negative: 0, cfg_dataset.labels.positive: 1})
     return X, y
 
 
-def validate_dataset(X: pd.DataFrame, y: pd.Series = None, require_label=False):
+def validate_dataset(X: pd.DataFrame, y: Optional[pd.Series] = None, require_label: bool = False) -> None:
     """ Validates dataset according to expected structure """
 
     if not isinstance(X, pd.DataFrame):

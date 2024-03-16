@@ -1,7 +1,11 @@
-from enum import Enum
-from typing import List, Dict, Any, Optional, Set
+try:
+    from enum import StrEnum  # type: ignore
+except ImportError:
+    from strenum import StrEnum
 
-from pydantic import BaseModel, Field, PositiveInt, NonNegativeInt, root_validator, model_validator
+from typing import List, Dict, Any, Set, Optional
+
+from pydantic import BaseModel, Field, PositiveInt, NonNegativeInt, model_validator, ConfigDict
 
 
 class Labels(BaseModel):
@@ -9,20 +13,20 @@ class Labels(BaseModel):
     positive: str = Field(min_length=1)
 
 
-class TimePoint(Enum):
+class TimePoint(StrEnum):
     T0 = 'T0'
     T1 = 'T1'
     T2 = 'T2'
 
 
-class Modality(Enum):
+class Modality(StrEnum):
     ADC0100 = 'ADC 0100'
     ADC0100600800 = 'ADC 0100600800'
     ADC100600800 = 'ADC 100600800'
     F = 'F'
 
 
-class Mask(Enum):
+class Mask(StrEnum):
     DWI = 'DWI MASK'
 
 
@@ -41,11 +45,11 @@ class RadiomicsFeaturesEncoder(BaseModel):
 
 class RadiomicsFeaturesTransformer(BaseModel):
     encoders: List[RadiomicsFeaturesEncoder]
-    engine: Dict[str, Any]
+    engine: Optional[Dict[str, Any]] = None
 
 
 class FeatureTransformer(BaseModel):
-    radiomics: RadiomicsFeaturesTransformer
+    radiomics: Optional[RadiomicsFeaturesTransformer] = None
 
 
 class FeatureSelection(BaseModel):
@@ -64,8 +68,8 @@ class Pipeline(BaseModel):
 
 
 class GridSearchParamGrid(BaseModel):
-    classifier: Dict[str, Any] = None
-    feature_selection: Dict[str, Any] = None
+    classifier: Optional[Dict[str, Any]] = None
+    feature_selection: Optional[Dict[str, Any]] = None
 
 
 class GridSearch(BaseModel):
@@ -76,31 +80,30 @@ class GridSearch(BaseModel):
 
 
 class ModelConfig(BaseModel):
+    model_config = ConfigDict(frozen=True, extra='forbid')
+
     dataset: Dataset
     pipeline: Pipeline
-    grid_search_cv: GridSearch = None
-
-    class Config:
-        frozen = True
-        extra = 'forbid'
+    grid_search_cv: Optional[GridSearch] = None
 
     @model_validator(mode='after')
-    def validate_encoders_dataset(self):
-        modalities = {e.image for e in self.pipeline.features_transformer.radiomics.encoders}
+    def validate_encoders_dataset(self) -> 'ModelConfig':
+        if self.pipeline.features_transformer.radiomics:
+            modalities = {e.image for e in self.pipeline.features_transformer.radiomics.encoders}
 
-        if not modalities.issubset(self.dataset.modalities):
-            raise ValueError("Encoders contain modalities that are not available in dataset")
+            if not modalities.issubset(self.dataset.modalities):
+                raise ValueError("Encoders contain modalities that are not available in dataset")
 
-        masks = {e.mask for e in self.pipeline.features_transformer.radiomics.encoders}
+            masks = {e.mask for e in self.pipeline.features_transformer.radiomics.encoders}
 
-        if not masks.issubset(self.dataset.masks):
-            raise ValueError("Encoders contain masks that are not available in dataset")
+            if not masks.issubset(self.dataset.masks):
+                raise ValueError("Encoders contain masks that are not available in dataset")
 
-        time_points = self.pipeline.features_transformer.radiomics.encoders[0].time_points
-        for e in self.pipeline.features_transformer.radiomics.encoders[1:]:
-            time_points = time_points.union(e.time_points)
+            time_points = self.pipeline.features_transformer.radiomics.encoders[0].time_points
+            for e in self.pipeline.features_transformer.radiomics.encoders[1:]:
+                time_points = time_points.union(e.time_points)
 
-        if not time_points.issubset(self.dataset.time_points):
-            raise ValueError("Encoders contain time points that are not available in dataset")
+            if not time_points.issubset(self.dataset.time_points):
+                raise ValueError("Encoders contain time points that are not available in dataset")
 
         return self
