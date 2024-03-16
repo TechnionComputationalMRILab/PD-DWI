@@ -2,7 +2,6 @@ from pickle import dump, load as pkl_load, HIGHEST_PROTOCOL
 from typing import Optional, Callable
 
 import pandas as pd
-from numpy import ndarray
 from sklearn.metrics import roc_auc_score
 from sklearn.model_selection import GridSearchCV
 
@@ -48,8 +47,7 @@ class Model(object):
 
         self.model = model
 
-        s = self.score(dataset_path)
-        print(f'Model score: {s:.4f}')
+        self.score(dataset_path)
 
         return self
 
@@ -90,7 +88,9 @@ class Model(object):
         else:
             y_pred = self.model.predict(X)
 
-        return f_score(y, y_pred)
+        s = f_score(y, y_pred)
+        print(f'Model score: {s:.4f}')
+        return s
 
     def _report_cross_validation(self, model: GridSearchCV) -> None:
         if not hasattr(model, 'best_params_'):

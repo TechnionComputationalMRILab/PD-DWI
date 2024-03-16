@@ -38,7 +38,7 @@ pipeline:
   feature_selection:
     k: 100
   classifier:
-    module: samples.XGBClassifier
+    module: xgboost.XGBClassifier
     parameters:
       random_state: 42
       use_label_encoder: False

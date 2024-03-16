@@ -6,32 +6,31 @@ from pydantic import ValidationError
 
 from pd_dwi.config.utils import read_config
 
-dirname = os.path.dirname(__file__)
 
+@pytest.mark.parametrize("test_data", ["valid"], indirect=["test_data"])
+def test_from_config_valid(test_data):
+    read_config(test_data)
 
-def test_from_config_valid():
-    valid_config_path = os.path.join(dirname, './data/valid.yaml')
-    read_config(valid_config_path)
-
-    read_config(open(valid_config_path))
+    read_config(open(test_data))
 
 
 @pytest.mark.parametrize(
-    'config_name,validation_msg',
+    'test_data,validation_msg',
     [
         ('invalid_no_modalities', 'Field required'),
         ('invalid_encoders_bad_modality', 'Value error, Encoders contain modalities that are not available in dataset'),
-        ('invalid_encoders_bad_time_points', 'Value error, Encoders contain time points that are not available in dataset')
-    ]
+        ('invalid_encoders_bad_time_points',
+         'Value error, Encoders contain time points that are not available in dataset')
+    ],
+    indirect=['test_data']
 )
-def test_from_config_invalid(config_name, validation_msg):
-    invalid_config_path = os.path.join(dirname, f'./data/{config_name}.yaml')
+def test_from_config_invalid(test_data, validation_msg):
     with pytest.raises(ValidationError) as e:
-        read_config(invalid_config_path)
+        read_config(test_data)
     assert cast(ValidationError, e.value).errors()[0]['msg'] == validation_msg
 
 
 def test_sample_configs():
-    sample_configs_folder = os.path.join(dirname, '../src/pd_dwi/config/samples')
+    sample_configs_folder = os.path.join(os.path.dirname(__file__), '../src/pd_dwi/config/samples')
     for filename in os.listdir(sample_configs_folder):
         read_config(os.path.join(sample_configs_folder, filename))
