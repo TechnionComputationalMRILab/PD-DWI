@@ -1,6 +1,6 @@
 import os
 from pathlib import Path
-from typing import Dict
+from typing import Dict, Tuple, Optional
 
 import numpy as np
 import pandas as pd
@@ -8,7 +8,7 @@ import pandas as pd
 from pd_dwi.config.config import Dataset
 
 
-def create_dataset(dataset_root: str, cfg_dataset: Dataset):
+def create_dataset(dataset_root: str, cfg_dataset: Dataset) -> Tuple[pd.DataFrame, pd.Series]:
     df_clinical_data = pd.read_csv(os.path.join(dataset_root, 'clinical.csv'), index_col='Patient ID DICOM') \
         .replace({np.nan: None})
 
@@ -49,7 +49,7 @@ def create_dataset(dataset_root: str, cfg_dataset: Dataset):
     return X, y
 
 
-def validate_dataset(X: pd.DataFrame, y: pd.Series = None, require_label=False):
+def validate_dataset(X: pd.DataFrame, y: Optional[pd.Series] = None, require_label: bool = False) -> None:
     """ Validates dataset according to expected structure """
 
     if not isinstance(X, pd.DataFrame):

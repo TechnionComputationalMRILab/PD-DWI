@@ -1,3 +1,5 @@
+from typing import Union
+
 from yaml import load, FullLoader
 
 from pd_dwi.config.config import ModelConfig

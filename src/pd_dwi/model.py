@@ -1,7 +1,8 @@
 from pickle import dump, load as pkl_load, HIGHEST_PROTOCOL
-from typing import Optional
+from typing import Optional, Callable
 
 import pandas as pd
+from numpy import ndarray
 from sklearn.metrics import roc_auc_score
 from sklearn.model_selection import GridSearchCV
 
@@ -12,15 +13,15 @@ from pd_dwi.training_utils import create_model_from_config
 
 
 class Model(object):
-    def __init__(self, config: Optional[ModelConfig] = None, model_obj=None):
+    def __init__(self, config: Optional[ModelConfig] = None, model_obj=None) -> None:
         self.config: Optional[ModelConfig] = config
         self.model = model_obj
 
     @classmethod
-    def from_config(cls, config):
+    def from_config(cls, config) -> 'Model':
         return cls(config=read_config(config))
 
-    def save(self, path):
+    def save(self, path: str) -> None:
         assert self.model is not None
 
         with open(path, mode='wb') as f:
@@ -29,11 +30,11 @@ class Model(object):
         print(f'Model saved successfully to: {path}')
 
     @classmethod
-    def load(cls, path):
+    def load(cls, path: str) -> 'Model':
         with open(path, mode='rb') as f:
             return pkl_load(f)
 
-    def train(self, dataset_path):
+    def train(self, dataset_path: str) -> 'Model':
         assert self.config is not None
 
         X_train, y_train = create_dataset(dataset_path, self.config.dataset)
@@ -52,27 +53,28 @@ class Model(object):
 
         return self
 
-    def predict(self, dataset_path):
+    def predict(self, dataset_path: str) -> pd.Series:
         assert self.model is not None
 
-        cfg_dataset = self.config['dataset']
+        cfg_dataset = self.config.dataset
         X, _ = create_dataset(dataset_path, cfg_dataset)
         validate_dataset(X)
 
         y_pred = self.model.predict(X)
         return pd.Series(y_pred, index=X.index)
 
-    def predict_proba(self, dataset_path):
+    def predict_proba(self, dataset_path: str) -> pd.Series:
         assert self.model is not None
 
-        cfg_dataset = self.config['dataset']
+        cfg_dataset = self.config.dataset
         X, _ = create_dataset(dataset_path, cfg_dataset)
         validate_dataset(X)
 
         y_pred = self.model.predict_proba(X)[:, 1]
         return pd.Series(y_pred, index=X.index)
 
-    def score(self, dataset_path, f_score=None, use_probability=None):
+    def score(self, dataset_path: str, f_score: Optional[Callable] = None,
+              use_probability: Optional[bool] = None) -> float:
         assert self.model is not None
         assert (f_score is not None) == (use_probability is not None)
 
@@ -80,7 +82,7 @@ class Model(object):
             f_score = roc_auc_score
             use_probability = True
 
-        cfg_dataset = self.config['dataset']
+        cfg_dataset = self.config.dataset
         X, y = create_dataset(dataset_path, cfg_dataset)
 
         if use_probability:
@@ -90,7 +92,7 @@ class Model(object):
 
         return f_score(y, y_pred)
 
-    def _report_cross_validation(self, model: GridSearchCV):
+    def _report_cross_validation(self, model: GridSearchCV) -> None:
         if not hasattr(model, 'best_params_'):
             return
 

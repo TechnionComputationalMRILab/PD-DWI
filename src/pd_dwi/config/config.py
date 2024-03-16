@@ -89,22 +89,23 @@ class ModelConfig(BaseModel):
         extra = 'forbid'
 
     @model_validator(mode='after')
-    def validate_encoders_dataset(self):
-        modalities = {e.image for e in self.pipeline.features_transformer.radiomics.encoders}
+    def validate_encoders_dataset(self) -> 'ModelConfig':
+        if self.pipeline.features_transformer.radiomics:
+            modalities = {e.image for e in self.pipeline.features_transformer.radiomics.encoders}
 
-        if not modalities.issubset(self.dataset.modalities):
-            raise ValueError("Encoders contain modalities that are not available in dataset")
+            if not modalities.issubset(self.dataset.modalities):
+                raise ValueError("Encoders contain modalities that are not available in dataset")
 
-        masks = {e.mask for e in self.pipeline.features_transformer.radiomics.encoders}
+            masks = {e.mask for e in self.pipeline.features_transformer.radiomics.encoders}
 
-        if not masks.issubset(self.dataset.masks):
-            raise ValueError("Encoders contain masks that are not available in dataset")
+            if not masks.issubset(self.dataset.masks):
+                raise ValueError("Encoders contain masks that are not available in dataset")
 
-        time_points = self.pipeline.features_transformer.radiomics.encoders[0].time_points
-        for e in self.pipeline.features_transformer.radiomics.encoders[1:]:
-            time_points = time_points.union(e.time_points)
+            time_points = self.pipeline.features_transformer.radiomics.encoders[0].time_points
+            for e in self.pipeline.features_transformer.radiomics.encoders[1:]:
+                time_points = time_points.union(e.time_points)
 
-        if not time_points.issubset(self.dataset.time_points):
-            raise ValueError("Encoders contain time points that are not available in dataset")
+            if not time_points.issubset(self.dataset.time_points):
+                raise ValueError("Encoders contain time points that are not available in dataset")
 
         return self

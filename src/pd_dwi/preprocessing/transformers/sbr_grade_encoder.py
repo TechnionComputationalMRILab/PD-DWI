@@ -1,3 +1,5 @@
+from typing import Optional, Any, List
+
 import pandas as pd
 from sklearn.base import BaseEstimator, TransformerMixin
 
@@ -8,11 +10,11 @@ class SBRGradeEncoder(TransformerMixin, BaseEstimator):
     """
     _ORDINAL_MAPPING = {'i (low)': 1.0, 'ii (intermediate)': 2.0, 'iii (high)': 3.0}
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.missing_value_ = None
         self.grade_column = 'SBRgrade'
 
-    def fit(self, X, y=None):
+    def fit(self, X: pd.DataFrame, y: Optional[pd.Series] = None) -> 'SBRGradeEncoder':
         assert X.shape[1] == 1, 'Expected exactly one column'
         assert self.grade_column in X.columns, f'Expected column name: {self.grade_column}'
 
@@ -21,14 +23,14 @@ class SBRGradeEncoder(TransformerMixin, BaseEstimator):
 
         return self
 
-    def transform(self, X, y=None):
+    def transform(self, X: pd.DataFrame, y: Optional[pd.Series] = None) -> pd.DataFrame:
         assert X.shape[1] == 1, 'Expected exactly one column'
         assert self.grade_column in X.columns, f'Expected column name: {self.grade_column}'
 
         return pd.DataFrame(X[self.grade_column].fillna(self.missing_value_).str.lower().replace(self._ORDINAL_MAPPING))
 
-    def get_feature_names(self, input_features=None):
+    def get_feature_names(self, input_features: Optional[Any] = None) -> List[str]:
         return [self.grade_column]
 
-    def get_feature_names_out(self, input_features=None):
+    def get_feature_names_out(self, input_features: Optional[Any] = None) -> List[str]:
         return [self.grade_column]
