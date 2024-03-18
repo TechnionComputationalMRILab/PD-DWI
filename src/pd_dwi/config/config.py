@@ -69,7 +69,7 @@ class Pipeline(BaseModel):
 
 class GridSearchParamGrid(BaseModel):
     classifier: Optional[Dict[str, Any]] = None
-    feature_selection: Optional[Dict[str, Any]] = None
+    features_selection: Optional[Dict[str, Any]] = None
 
 
 class GridSearch(BaseModel):
