@@ -55,7 +55,7 @@ def create_pipeline_from_config(cfg: ModelConfig) -> Pipeline:
         remainder='drop'
     )
 
-    cfg_feature_selection = cfg.pipeline.feature_selection
+    cfg_feature_selection = cfg.pipeline.features_selection
     if cfg_feature_selection is None:
         features_selection = SelectKBest(f_classif)
     else:
