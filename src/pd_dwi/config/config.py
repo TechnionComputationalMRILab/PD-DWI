@@ -63,7 +63,7 @@ class Classifier(BaseModel):
 
 class Pipeline(BaseModel):
     features_transformer: FeatureTransformer
-    feature_selection: FeatureSelection
+    features_selection: FeatureSelection
     classifier: Classifier
 
 

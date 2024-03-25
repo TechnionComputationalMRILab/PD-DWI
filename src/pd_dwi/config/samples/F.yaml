@@ -29,7 +29,7 @@ pipeline:
           Original: { }
         setting:
           resampledPixelSpacing: [ 1.27,1.27,4.0 ]
-  feature_selection:
+  features_selection:
     k: 100
   classifier:
     module: xgboost.XGBClassifier
