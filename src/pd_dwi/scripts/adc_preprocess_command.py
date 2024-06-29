@@ -1,5 +1,3 @@
-from typing import Any
-
 from pd_dwi.preprocessing.adc import calculate_adc
 
 
@@ -10,7 +8,7 @@ def adc_preprocess(args):
     calculate_adc(dwi_folder_path, set(b_values), dwi_folder_path)
 
 
-def add_adc_preprocess_parser(parser) -> None:
+def add_adc_parser(parser) -> None:
     parser.add_argument('-dwi_folder', type=str, required=True, help="Path for DWI acquisition folder")
     parser.add_argument('-b', type=int, nargs='+', required=True, help="B-values to use for ADC calculation")
 

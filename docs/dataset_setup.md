@@ -1,15 +1,17 @@
-# Dataset
+# Dataset Setup
 
 ## Structure
+
+PD-DWI model training and inference expects a specific folders and files structure
 
     .
     ├── train                       # Training dataset 
     │   ├── clinical.csv            # Clinical information of subjects
     │   ├── subject X               # Subject imaging modalities
     │   │   ├── T0                  # Subject modalities acquired at T0 
-    │   │   │   ├── MASK.dcm        # Diffusion Weighted Imaging mask
+    │   │   │   ├── ADC 0100.dcm    # ADC calculated from b-values 0-100
     │   │   │   ├── F.dcm           # Diffusion Fraction volume
-    │   │   │   ├── ADC 0100.dcm    # ADC of b-values 0-100 volume
+    │   │   │   ├── MASK.dcm        # Diffusion Weighted Imaging mask
     │   │   │   └── ...
     │   │   └── ...
     │   └── ...
@@ -18,10 +20,20 @@
     │   ├── subject Y               
     └── ...
 
+## Imaging data
 
-## Clinical information
+As shown in above structure, imaging data is stored by subject id and acquision time.
 
-The clinical.csv must contain the following attributes: 
+Our PD-DWI framework requires at least one DWI-based map, accompanied by a MASK which represents the tumor ROI.
+It is assumed that tumor MASK is corresponding to the DWI-based map, and available in the same spacing.
+The DWI-based map can be either ADC or F, or both. 
+
+To calculate the ADC and F maps from your DWI data, please use our pre-processing utility. 
+
+## Clinical data
+
+All clinical data will be stored in a file named _clinical.csv_. 
+Each line will contain the following values, by order of appearance: 
 1. Patient ID DICOM - subject identifier, must be identical to subject's folder name
 2. hrher4g - 4 level hormone receptor status
 3. SBRgrade - 3 level tumor grade 
