@@ -34,6 +34,17 @@ tests-mypy = ["mypy (>=1.6)", "pytest-mypy-plugins"]
 tests-no-zope = ["attrs", "cloudpickle", "hypothesis", "pympler", "pytest-xdist", "pytest (>=4.3.0)"]
 
 [[package]]
+name = "click"
+version = "8.1.7"
+description = "Composable command line interface toolkit"
+category = "dev"
+optional = false
+python-versions = ">=3.7"
+
+[package.dependencies]
+colorama = {version = "*", markers = "platform_system == \"Windows\""}
+
+[[package]]
 name = "colorama"
 version = "0.4.6"
 description = "Cross-platform colored terminal text."
@@ -70,6 +81,20 @@ description = "Pythonic argument parser, that will make you smile"
 category = "main"
 optional = false
 python-versions = "*"
+
+[[package]]
+name = "ghp-import"
+version = "2.1.0"
+description = "Copy your docs directly to the gh-pages branch."
+category = "dev"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+python-dateutil = ">=2.8.1"
+
+[package.extras]
+dev = ["twine", "markdown", "flake8", "wheel"]
 
 [[package]]
 name = "importlib-metadata"
@@ -111,6 +136,20 @@ optional = false
 python-versions = ">=3.7"
 
 [[package]]
+name = "jinja2"
+version = "3.1.4"
+description = "A very fast and expressive template engine."
+category = "dev"
+optional = false
+python-versions = ">=3.7"
+
+[package.dependencies]
+MarkupSafe = ">=2.0"
+
+[package.extras]
+i18n = ["Babel (>=2.7)"]
+
+[[package]]
 name = "joblib"
 version = "1.4.2"
 description = "Lightweight pipelining with Python functions"
@@ -149,6 +188,79 @@ python-versions = ">=3.8"
 [package.dependencies]
 importlib-resources = {version = ">=1.4.0", markers = "python_version < \"3.9\""}
 referencing = ">=0.31.0"
+
+[[package]]
+name = "markdown"
+version = "3.6"
+description = "Python implementation of John Gruber's Markdown."
+category = "dev"
+optional = false
+python-versions = ">=3.8"
+
+[package.dependencies]
+importlib-metadata = {version = ">=4.4", markers = "python_version < \"3.10\""}
+
+[package.extras]
+docs = ["mkdocs (>=1.5)", "mkdocs-nature (>=0.6)", "mdx-gh-links (>=0.2)", "mkdocstrings", "mkdocs-gen-files", "mkdocs-section-index", "mkdocs-literate-nav"]
+testing = ["coverage", "pyyaml"]
+
+[[package]]
+name = "markupsafe"
+version = "2.1.5"
+description = "Safely add untrusted strings to HTML/XML markup."
+category = "dev"
+optional = false
+python-versions = ">=3.7"
+
+[[package]]
+name = "mergedeep"
+version = "1.3.4"
+description = "A deep merge function for 🐍."
+category = "dev"
+optional = false
+python-versions = ">=3.6"
+
+[[package]]
+name = "mkdocs"
+version = "1.6.0"
+description = "Project documentation with Markdown."
+category = "dev"
+optional = false
+python-versions = ">=3.8"
+
+[package.dependencies]
+click = ">=7.0"
+colorama = {version = ">=0.4", markers = "platform_system == \"Windows\""}
+ghp-import = ">=1.0"
+importlib-metadata = {version = ">=4.4", markers = "python_version < \"3.10\""}
+jinja2 = ">=2.11.1"
+markdown = ">=3.3.6"
+markupsafe = ">=2.0.1"
+mergedeep = ">=1.3.4"
+mkdocs-get-deps = ">=0.2.0"
+packaging = ">=20.5"
+pathspec = ">=0.11.1"
+pyyaml = ">=5.1"
+pyyaml-env-tag = ">=0.1"
+watchdog = ">=2.0"
+
+[package.extras]
+i18n = ["babel (>=2.9.0)"]
+min-versions = ["babel (==2.9.0)", "click (==7.0)", "colorama (==0.4)", "ghp-import (==1.0)", "importlib-metadata (==4.4)", "jinja2 (==2.11.1)", "markdown (==3.3.6)", "markupsafe (==2.0.1)", "mergedeep (==1.3.4)", "mkdocs-get-deps (==0.2.0)", "packaging (==20.5)", "pathspec (==0.11.1)", "pyyaml-env-tag (==0.1)", "pyyaml (==5.1)", "watchdog (==2.0)"]
+
+[[package]]
+name = "mkdocs-get-deps"
+version = "0.2.0"
+description = "MkDocs extension that lists all dependencies according to a mkdocs.yml file"
+category = "dev"
+optional = false
+python-versions = ">=3.8"
+
+[package.dependencies]
+importlib-metadata = {version = ">=4.3", markers = "python_version < \"3.10\""}
+mergedeep = ">=1.3.4"
+platformdirs = ">=2.2.0"
+pyyaml = ">=5.1"
 
 [[package]]
 name = "mypy"
@@ -210,12 +322,33 @@ pytz = ">=2020.1"
 test = ["hypothesis (>=5.5.3)", "pytest (>=6.0)", "pytest-xdist (>=1.31)"]
 
 [[package]]
+name = "pathspec"
+version = "0.12.1"
+description = "Utility library for gitignore style pattern matching of file paths."
+category = "dev"
+optional = false
+python-versions = ">=3.8"
+
+[[package]]
 name = "pkgutil-resolve-name"
 version = "1.3.10"
 description = "Resolve a name to an object."
 category = "main"
 optional = false
 python-versions = ">=3.6"
+
+[[package]]
+name = "platformdirs"
+version = "4.2.2"
+description = "A small Python package for determining appropriate platform-specific dirs, e.g. a `user data dir`."
+category = "dev"
+optional = false
+python-versions = ">=3.8"
+
+[package.extras]
+docs = ["furo (>=2023.9.10)", "proselint (>=0.13)", "sphinx-autodoc-typehints (>=1.25.2)", "sphinx (>=7.2.6)"]
+test = ["appdirs (==1.4.4)", "covdefaults (>=2.3)", "pytest-cov (>=4.1)", "pytest-mock (>=3.12)", "pytest (>=7.4.3)"]
+type = ["mypy (>=1.8)"]
 
 [[package]]
 name = "pluggy"
@@ -422,6 +555,17 @@ optional = false
 python-versions = ">=3.6"
 
 [[package]]
+name = "pyyaml-env-tag"
+version = "0.1"
+description = "A custom YAML tag for referencing environment variables in YAML files. "
+category = "dev"
+optional = false
+python-versions = ">=3.6"
+
+[package.dependencies]
+pyyaml = "*"
+
+[[package]]
 name = "referencing"
 version = "0.35.1"
 description = "JSON Referencing + Python"
@@ -562,6 +706,17 @@ optional = false
 python-versions = ">=3.8"
 
 [[package]]
+name = "watchdog"
+version = "4.0.1"
+description = "Filesystem events monitoring"
+category = "dev"
+optional = false
+python-versions = ">=3.8"
+
+[package.extras]
+watchmedo = ["PyYAML (>=3.10)"]
+
+[[package]]
 name = "xgboost"
 version = "1.7.6"
 description = "XGBoost Python Package"
@@ -599,7 +754,7 @@ preprocessing = ["pydicom"]
 [metadata]
 lock-version = "1.1"
 python-versions = ">=3.8,<3.9"
-content-hash = "b2dca7a6e8d5c28ff1251d708dff9d934fa635c9ec43b7c16d0be5200f528c2b"
+content-hash = "92ad4dc206521d3ef3dfa2170f8c2fbe6402cb558fc3ab0536e29ac73a9dc8cc"
 
 [metadata.files]
 annotated-types = []
@@ -607,6 +762,7 @@ atomicwrites = [
     {file = "atomicwrites-1.4.1.tar.gz", hash = "sha256:81b2c9071a49367a7f770170e5eec8cb66567cfbbc8c73d20ce5ca4a8d71cf11"},
 ]
 attrs = []
+click = []
 colorama = [
     {file = "colorama-0.4.6-py2.py3-none-any.whl", hash = "sha256:4f1d9991f5acc0ca119f9d443620b77f9d6b33703e51011c16baf57afb285fc6"},
     {file = "colorama-0.4.6.tar.gz", hash = "sha256:08695f5cb7ed6e0531a20572697297273c47b8cae5a63ffc6d6ed5c201be6e44"},
@@ -614,21 +770,30 @@ colorama = [
 coverage = []
 cython = []
 docopt = []
+ghp-import = []
 importlib-metadata = []
 importlib-resources = []
 iniconfig = []
+jinja2 = []
 joblib = []
 jsonschema = []
 jsonschema-specifications = []
+markdown = []
+markupsafe = []
+mergedeep = []
+mkdocs = []
+mkdocs-get-deps = []
 mypy = []
 mypy-extensions = []
 numpy = []
 packaging = []
 pandas = []
+pathspec = []
 pkgutil-resolve-name = [
     {file = "pkgutil_resolve_name-1.3.10-py3-none-any.whl", hash = "sha256:ca27cc078d25c5ad71a9de0a7a330146c4e014c2462d9af19c6b828280649c5e"},
     {file = "pkgutil_resolve_name-1.3.10.tar.gz", hash = "sha256:357d6c9e6a755653cfd78893817c0853af365dd51ec97f3d358a819373bbd174"},
 ]
+platformdirs = []
 pluggy = []
 py = [
     {file = "py-1.11.0-py2.py3-none-any.whl", hash = "sha256:607c53218732647dff4acdfcd50cb62615cedf612e72d1724fb1a0cc6405b378"},
@@ -648,6 +813,7 @@ python-dateutil = []
 pytz = []
 pywavelets = []
 pyyaml = []
+pyyaml-env-tag = []
 referencing = []
 rpds-py = []
 "ruamel.yaml" = []
@@ -689,5 +855,6 @@ tomli = [
 ]
 types-pyyaml = []
 typing-extensions = []
+watchdog = []
 xgboost = []
 zipp = []

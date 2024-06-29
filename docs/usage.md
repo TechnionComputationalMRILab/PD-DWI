@@ -1,6 +1,6 @@
-# Dataset Setup
+# Usage
 
-## Structure
+## Dataset setup
 
 PD-DWI model training and inference expects a specific folders and files structure
 
@@ -20,7 +20,7 @@ PD-DWI model training and inference expects a specific folders and files structu
     │   ├── subject Y               
     └── ...
 
-## Imaging data
+### Imaging data
 
 As shown in above structure, imaging data is stored by subject id and acquision time.
 
@@ -30,7 +30,7 @@ The DWI-based map can be either ADC or F, or both.
 
 To calculate the ADC and F maps from your DWI data, please use our pre-processing utility. 
 
-## Clinical data
+### Clinical data
 
 All clinical data will be stored in a file named _clinical.csv_. 
 Each line will contain the following values, by order of appearance: 
@@ -40,3 +40,37 @@ Each line will contain the following values, by order of appearance:
 4. race - subject's race
 5. Ltype - lesion type
 6. pcr - pCR label of subject. If not available, should be defined as an empty string
+
+## Command-line usage 
+
+All options on the command line can be listed by running:
+
+!!! note ""
+    pd-dwi -h
+
+### Train
+To train a pd-dwi model, run: 
+
+!!! note ""
+    pd-dwi train -dataset <path/to/dataset\> -config <path/to/config\> -out <path/to/store/model\>
+
+* The pd-dwi framework expects the dataset to be organized in a specific way, please refer to Dataset setup for additional information.
+* For training configuration structure and options, please refer to training configuration documentation.    
+
+
+### Predict
+To predict model output using a pre-trained pd-dwi model, run
+
+!!! note ""
+    pd-dwi predict -model <path/to/pre-trained/model\> -dataset <path/to/dataset\> [-probability] -out <path/to/store/model/output\>
+
+!!! warning 
+    The pre-trained model must be trained on the same pd-dwi version as the one used for prediction
+
+
+### Score
+To evaluate the performance of the pd-dwi model, run 
+
+!!! note ""
+    pd-dwi score -model <path/to/pre-trained/model\> -dataset <path/to/dataset\> 
+

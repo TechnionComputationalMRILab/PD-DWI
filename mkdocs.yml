@@ -1,0 +1,12 @@
+site_name: PD-DWI
+
+nav:
+  - Home: index.md
+  - Installation: installation.md
+  - Usage: usage.md
+  - Training Configuration: training_configuration.md
+  - Dataset Preprocessing: dataset_preprocessing.md
+
+theme: readthedocs
+markdown_extensions:
+  - admonition
