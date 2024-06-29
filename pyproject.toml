@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pd-dwi"
-version = "1.0.5"
+version = "1.1.0"
 description = "Physiologically-Decomposed Diffusion-Weighted MRI machine-learning model for predicting response to neoadjuvant chemotherapy in invasive breast cancer"
 authors = [
     "Maya Gilad <ms.maya.gilad@gmail.com>"
@@ -22,6 +22,7 @@ repository = "https://github.com/TechnionComputationalMRILab/PD-DWI"
 
 [tool.poetry.scripts]
 pd-dwi = "pd_dwi.scripts.cli:pd_dwi_cli"
+pd-dwi-preprocessing = "pd_dwi.scripts.cli:preprocessing_cli"
 
 
 [tool.poetry.dependencies]
@@ -37,6 +38,7 @@ pandas = "^1.4.3"
 pydantic = "^2.6.4"
 pydantic-yaml = "^1.2.1"
 StrEnum = {version = "^0.4.15", python = "<3.11"}
+pydicom = "^2.4.4"
 
 [tool.poetry.dev-dependencies]
 pytest = "7.1.2"
@@ -45,6 +47,10 @@ pytest-subtests = "^0.12.1"
 mypy = "^1.9.0"
 types-PyYAML = "^6.0.12"
 pytest-mock = "^3.12.0"
+mkdocs = "^1.6.0"
+
+[tool.poetry.extras]
+preprocessing = ["pydicom"]
 
 [tool.mypy]
 python_version = "3.8"
