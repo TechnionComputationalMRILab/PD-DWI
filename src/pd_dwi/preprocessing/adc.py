@@ -44,7 +44,10 @@ def _least_squares_line_fit(variables: np.array, observations: np.array):
     X = np.stack((np.ones(variables.shape[0]), variables), axis=1)
     assert X.shape == (variables.shape[0], variables.shape[1] if variables.ndim == 2 else 2)
 
-    intercept, slope = np.linalg.inv(X.T.dot(X)).dot(X.T).dot(Y)
+    x = np.linalg.lstsq(X, Y, rcond=None)
+
+    intercept = np.exp(x[0][0])
+    slope = x[0][1]
     return intercept, slope
 
 
@@ -56,11 +59,11 @@ def calculate_adc_slice(b_values, dwi_observations):
     num_pixels = num_rows * num_columns
 
     # variables are all non 0 b value
-    variables = np.array(b_values[1:])
+    variables = -np.array(b_values[1:])
     assert variables.shape == (num_dwi_images - 1,)
 
     # observations are from non 0 b value
-    observations = np.stack([ma.log(ma.divide(img.flatten(), dwi_observations[0].flatten())).filled(0)
+    observations = np.stack([ma.log(img.flatten()).filled(0)
                              for img in dwi_observations[1:]], axis=0)
     assert observations.shape == (num_dwi_images - 1, num_pixels)
 
@@ -70,8 +73,8 @@ def calculate_adc_slice(b_values, dwi_observations):
     intercept = intercept.reshape((num_rows, num_columns))
     slope = slope.reshape((num_rows, num_columns))
 
-    # Keep only negative slopes
-    slope = np.clip(slope, None, 0)
+    # Keep only positive slopes
+    slope = np.clip(slope, 0, None)
 
     return intercept, slope
 
@@ -140,7 +143,7 @@ def calculate_adc_from_files(*dwi_file_paths) -> np.ndarray:
     adc_data = np.zeros(adc_shape, dtype=np.float64)
     for slice_idx in range(adc_shape[0]):
         _, slope = calculate_adc_slice(b_values, list(map(itemgetter(slice_idx), dwi_observations)))
-        adc_data[slice_idx] = np.negative(slope)
+        adc_data[slice_idx] = slope
 
     return adc_data
 
