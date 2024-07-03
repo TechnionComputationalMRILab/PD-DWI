@@ -1,5 +1,10 @@
 site_name: PD-DWI
 
+theme:
+  name: readthedocs
+  highlightjs: true
+  include_homepage_in_sidebar: true
+
 nav:
   - Home: index.md
   - Installation: installation.md
@@ -7,6 +12,17 @@ nav:
   - Training Configuration: training_configuration.md
   - Dataset Preprocessing: dataset_preprocessing.md
 
-theme: readthedocs
+plugins:
+  - plotly
+  - termynal:
+      title: bash
+
 markdown_extensions:
   - admonition
+  - pymdownx.superfences:
+      custom_fences:
+        - name: plotly
+          class: mkdocs-plotly
+          format: !!python/name:mkdocs_plotly_plugin.fences.fence_plotly
+
+

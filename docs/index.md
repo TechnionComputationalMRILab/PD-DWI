@@ -11,3 +11,30 @@ PD-DWI was developed by [TCML](https://tcml-bme.github.io/) group as part of [BM
 
 !!! warning
     Not intended for clinical use. 
+
+## BMMR2 Challenge 
+
+``` plotly
+{
+    "data": [
+        {
+            "x": [
+                "Benchmark",
+                "Team C",
+                "Team B",
+                "Team A",
+                "PD-DWI"
+            ],
+            "y": [
+                0.782,
+                0.803,
+                0.838,
+                0.840,
+                0.885
+            ],
+            "type": "bar"
+        }
+    ]
+}
+```
+
