@@ -1,24 +1,20 @@
 import os.path
 
+import click
+
 from pd_dwi.preprocessing.adc import calculate_adc
 
 
-def adc_preprocess(args):
-    input_data = args.dwi_data
-    b_values = args.b
-
-    if os.path.isdir(input_data):
-        calculate_adc(input_data, set(b_values), input_data)
+@click.command(name='adc')
+@click.argument('dwi_data', type=click.Path(exists=True, file_okay=False))
+@click.argument('b', nargs=-1, required=True, type=click.IntRange(min=0))
+def adc_preprocess(dwi_data, b):
+    """ Calculates ADC from input DWI sequences and saves it in DWI folder. """
+    if os.path.isdir(dwi_data):
+        calculate_adc(dwi_data, set(b), dwi_data)
     else:
-        with open(input_data, mode='r') as f:
+        with open(dwi_data, mode='r') as f:
             # Skip first line
             f.readline()
             for dwi_folder in f.readlines():
-                calculate_adc(dwi_folder, set(b_values), dwi_folder)
-
-
-def add_adc_parser(parser) -> None:
-    parser.add_argument('-dwi_data', type=str, required=True, help="Path for DWI acquisition folder or input file listing DWI folders")
-    parser.add_argument('-b', type=int, nargs='+', required=True, help="B-values to use for ADC calculation")
-
-    parser.set_defaults(func=adc_preprocess)
+                calculate_adc(dwi_folder, set(b), dwi_folder)

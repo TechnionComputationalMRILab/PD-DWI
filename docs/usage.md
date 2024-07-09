@@ -41,36 +41,12 @@ Each line will contain the following values, by order of appearance:
 5. Ltype - lesion type
 6. pcr - pCR label of subject. If not available, should be defined as an empty string
 
-## Command-line usage 
+## Command-line Usage 
 
-All options on the command line can be listed by running:
+This page provides documentation for command line tools.
 
-!!! note ""
-    pd-dwi -h
-
-### Train
-To train a pd-dwi model, run: 
-
-!!! note ""
-    pd-dwi train -dataset <path/to/dataset\> -config <path/to/config\> -out <path/to/store/model\>
-
-* The pd-dwi framework expects the dataset to be organized in a specific way, please refer to Dataset setup for additional information.
-* For training configuration structure and options, please refer to training configuration documentation.    
-
-
-### Predict
-To predict model output using a pre-trained pd-dwi model, run
-
-!!! note ""
-    pd-dwi predict -model <path/to/pre-trained/model\> -dataset <path/to/dataset\> [-probability] -out <path/to/store/model/output\>
-
-!!! warning 
-    The pre-trained model must be trained on the same pd-dwi version as the one used for prediction
-
-
-### Score
-To evaluate the performance of the pd-dwi model, run 
-
-!!! note ""
-    pd-dwi score -model <path/to/pre-trained/model\> -dataset <path/to/dataset\> 
-
+::: mkdocs-click
+    :module: pd_dwi.scripts.cli
+    :command: pd_dwi_cli
+    :style: table
+    :list_subcommands: true

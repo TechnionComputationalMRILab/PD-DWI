@@ -1,9 +1,11 @@
 site_name: PD-DWI
 
+repo_url: https://github.com/technionComputationalMRILab/PD-DWI/
+
 theme:
-  name: readthedocs
-  highlightjs: true
-  include_homepage_in_sidebar: true
+  name: material
+#  highlightjs: true
+#  include_homepage_in_sidebar: true
 
 nav:
   - Home: index.md
@@ -14,11 +16,14 @@ nav:
 
 plugins:
   - plotly
-  - termynal:
-      title: bash
+  - search
 
 markdown_extensions:
+  - toc:
+      permalink: true
   - admonition
+  - attr_list
+  - mkdocs-click
   - pymdownx.superfences:
       custom_fences:
         - name: plotly
