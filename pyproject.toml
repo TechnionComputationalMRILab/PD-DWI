@@ -59,6 +59,9 @@ mkdocs-material = "^9.5.28"
 preprocessing = ["pydicom"]
 
 
+[tool.poetry.group.dev.dependencies]
+pytest-mock = "^3.14.0"
+
 [tool.mypy]
 python_version = "3.8"
 ignore_missing_imports = true

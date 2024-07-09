@@ -142,13 +142,13 @@ def calculate_adc_from_files(*dwi_file_paths) -> np.ndarray:
     adc_shape = dwi_arrays[0].shape
     adc_data = np.zeros(adc_shape, dtype=np.float64)
     for slice_idx in range(adc_shape[0]):
-        _, slope = calculate_adc_slice(b_values, list(map(itemgetter(slice_idx), dwi_observations)))
+        _, slope = calculate_adc_slice(b_values, list(map(itemgetter(slice_idx), dwi_arrays)))
         adc_data[slice_idx] = slope
 
     return adc_data
 
 
-def calculate_adc(dwi_input_folder: str, b_values: Set[int], output_folder: str) -> np.ndarray:
+def calculate_adc(dwi_input_folder: str, b_values: Set[int], output_folder: Optional[str] = None) -> np.ndarray:
     """
     Calculates ADC data from DWI acquisition and set of input b-values
 
@@ -161,7 +161,7 @@ def calculate_adc(dwi_input_folder: str, b_values: Set[int], output_folder: str)
     dwi_file_paths = _find_dwi_files(dwi_input_folder, b_values)
     adc_data = calculate_adc_from_files(*dwi_file_paths)
 
-    if output_folder is not None:
+    if output_folder:
         _save_adc(adc_data, b_values, dwi_file_paths[0], output_folder,
                   comments="Created using Least-Squares Line Fit (matrices implementation)")
 

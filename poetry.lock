@@ -2005,4 +2005,4 @@ preprocessing = ["pydicom"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.8.1,<3.9"
-content-hash = "7e5afd7fe210bf2866791a5ceb3d255522a625d76b49e377ee6eeeadc8f76d3a"
+content-hash = "d543a006305ea0d382784df5ee132529eb3a22a472e7f2f21f34a348f1dec822"
