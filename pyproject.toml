@@ -54,7 +54,6 @@ pymdown-extensions = "^10.8.1"
 termynal = "^0.12.1"
 mkdocs-click = "^0.8.1"
 mkdocs-material = "^9.5.28"
-mkdocs-glightbox = "^0.4.0"
 
 [tool.poetry.extras]
 preprocessing = ["pydicom"]
