@@ -4,6 +4,10 @@ PD-DWI is a physiologically-decomposed Diffusion-Weighted MRI machine-learning m
 
 PD-DWI was developed by [TCML](https://tcml-bme.github.io/) group. 
 
+<figure markdown="span">
+    ![TCML](assets/tcml.png)
+</figure>
+
 **If you publish any work which uses this package, please cite the following publication:** Gilad, M., Freiman, M. (2022). PD-DWI: Predicting Response to Neoadjuvant Chemotherapy in Invasive Breast Cancer with Physiologically-Decomposed Diffusion-Weighted MRI Machine-Learning Model. In: Wang, L., Dou, Q., Fletcher, P.T., Speidel, S., Li, S. (eds) Medical Image Computing and Computer Assisted Intervention – MICCAI 2022. MICCAI 2022. Lecture Notes in Computer Science, vol 13433. Springer, Cham. https://doi.org/10.1007/978-3-031-16437-8_4
 
 !!! note

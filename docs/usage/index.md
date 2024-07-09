@@ -1,4 +1,4 @@
-# Usage
+# Getting Started
 
 ## Dataset setup
 
@@ -30,6 +30,18 @@ The DWI-based map can be either ADC or F, or both.
 
 To calculate the ADC and F maps from your DWI data, please use our pre-processing utility. 
 
+## ADC Calculation
+
+### Command-line Usage 
+
+This page provides documentation for command line tools.
+
+::: mkdocs-click
+    :module: pd_dwi.scripts.cli
+    :command: preprocessing_cli
+    :style: table
+
+
 ### Clinical data
 
 All clinical data will be stored in a file named _clinical.csv_. 
@@ -49,4 +61,3 @@ This page provides documentation for command line tools.
     :module: pd_dwi.scripts.cli
     :command: pd_dwi_cli
     :style: table
-    :list_subcommands: true

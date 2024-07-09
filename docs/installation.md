@@ -10,25 +10,32 @@ There are two ways you can use PD-DWI
 PD-DWI package is available on PyPi for installation via pip. Wheels are automatically generated for each release of PD-DWI, allowing you to
 install pd-dwi without having to compile anything. 
 
-* Ensure that you have ``python`` installed on your machine, version 3.8 (64-bits).
+!!! note
+    Ensure that you have python 3.8 installed on your machine.
 
 * Install PD-DWI:
-
-    !!! info inline end ""
-        python -m pip install pd-dwi
+    ```bash
+    python -m pip install pd-dwi
+    ```
 
 ## Install from source
 
-PD-DWI can also be installed from source code. 
+PD-DWI can also be installed from source code.
 
-* Ensure you have `git` installed on your machine.
-* Ensure you have `python` installed on your machine, version 3.8.
-* Ensure you have `poetry` installed on your machine, version 1.1.11
-* Clone the repository
+!!! note
+    Ensure the following pre-prerequisites are installed on your machine:
 
-    !!! info inline end ""
+    * git
+    * python 3.8
+    * poetry 1.1.11
+
+1. Clone the repository
+    ```bash
         git clone https://github.com/TechnionComputationalMRILab/PD-DWI.git
-
-* For unix like systems
-
-    TBD
+    ```
+   
+2. Install the project 
+    ```bash
+      cd PD-DWI
+      poetry install --all-extras
+    ```

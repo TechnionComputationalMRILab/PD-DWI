@@ -10,20 +10,48 @@ theme:
 nav:
   - Home: index.md
   - Installation: installation.md
-  - Usage: usage.md
-  - Training Configuration: training_configuration.md
-  - Dataset Preprocessing: dataset_preprocessing.md
+  - Usage:
+      - Getting Started: usage/index.md
+      - Training Configuration: usage/training_configuration.md
 
 plugins:
   - plotly
   - search
 
 markdown_extensions:
-  - toc:
-      permalink: true
+  # Python Markdown
+  - abbr
   - admonition
   - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - toc:
+      permalink: true
+
+  # Python Markdown Extensions
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.details
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
   - mkdocs-click
+  - md_in_html
   - pymdownx.superfences:
       custom_fences:
         - name: plotly
