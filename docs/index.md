@@ -36,14 +36,20 @@ PD-DWI was developed by [TCML](https://tcml-bme.github.io/) group.
                 0.840,
                 0.885
             ],
+            "marker": {
+                "color": ["rgba(136,204,238,1)", "rgba(136,204,238,1)", "rgba(136,204,238,1)", "rgba(136,204,238,1)", "rgba(204,102,119,1)"] 
+            },
             "type": "bar"
         }
     ],
     "layout": {
+        "title": "Model Performance",
+        "xaxis": { "title": "Best Performing Models" },
         "yaxis": {
+            "title": "AUC Score",
             "range": [
                 0.75,
-                1
+                0.9
             ]
         }
     }
