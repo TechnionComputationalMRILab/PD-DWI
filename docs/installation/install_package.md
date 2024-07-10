@@ -1,9 +1,4 @@
-# Installation
-
-There are two ways you can use PD-DWI
-
-1. Install via pip
-2. Install from source
+# Install Package
 
 ## Install via pip
 
@@ -30,12 +25,10 @@ PD-DWI can also be installed from source code.
     * poetry 1.1.11
 
 1. Clone the repository
-    ```bash
-        git clone https://github.com/TechnionComputationalMRILab/PD-DWI.git
-    ```
-   
-2. Install the project 
-    ```bash
-      cd PD-DWI
-      poetry install --all-extras
-    ```
+```console
+    git clone https://github.com/TechnionComputationalMRILab/PD-DWI.git
+```
+2. Install the project
+```console
+  cd PD-DWI & poetry install --all-extras
+```
