@@ -1,12 +1,12 @@
+import click
+
 from pd_dwi.model import Model
 
 
-def score(args):
-    score = Model.load(args.model).score(args.dataset)
+@click.command()
+@click.argument('model_path', type=click.Path(exists=True, dir_okay=False))
+@click.argument('dataset', type=click.Path(exists=True, file_okay=False))
+def score(model_path, dataset):
+    """ Evaluate model performance on a given dataset. """
+    score = Model.load(model_path).score(dataset)
     print(f'{score:.4f}')
-
-
-def add_score_parser(parser):
-    parser.add_argument('-model', type=str, required=True, help="Path for model name to load")
-    parser.add_argument('-dataset', type=str, required=True, help="Path for dataset to use")
-    parser.set_defaults(func=score)

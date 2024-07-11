@@ -1,36 +1,28 @@
-import argparse
-from typing import List, Optional
+import click
 
-from pd_dwi.scripts.adc_preprocess_command import add_adc_parser
-from pd_dwi.scripts.list_command import add_list_parser
-from pd_dwi.scripts.predict_command import add_predict_parser
-from pd_dwi.scripts.score_command import add_score_parser
-from pd_dwi.scripts.train_command import add_train_parser
-
-
-def pd_dwi_cli(input_args: Optional[List[str]] = None) -> None:
-    parser = argparse.ArgumentParser()
-    subparsers = parser.add_subparsers(dest='cmd', required=True)
-
-    add_train_parser(subparsers.add_parser('train'))
-    add_predict_parser(subparsers.add_parser('predict'))
-    add_score_parser(subparsers.add_parser('score'))
-    add_list_parser(subparsers.add_parser('list'))
-
-    args = parser.parse_args(input_args)
-    args.func(args)
+from pd_dwi.scripts.adc_preprocess_command import adc_preprocess
+from pd_dwi.scripts.list_command import list_available_models
+from pd_dwi.scripts.predict_command import predict
+from pd_dwi.scripts.score_command import score
+from pd_dwi.scripts.train_command import train
 
 
-def preprocessing_cli(input_args: Optional[List[str]] = None) -> None:
-    parser = argparse.ArgumentParser()
-
-    subparsers = parser.add_subparsers(dest='cmd', required=True)
-
-    add_adc_parser(subparsers.add_parser('adc'))
-
-    args = parser.parse_args(input_args)
-    args.func(args)
+@click.group(name='pd-dwi')
+@click.version_option(message='version %(version)s')
+def pd_dwi_cli() -> None:
+    pass
 
 
-if __name__ == '__main__':
-    pd_dwi_cli()
+pd_dwi_cli.add_command(list_available_models)
+pd_dwi_cli.add_command(predict)
+pd_dwi_cli.add_command(score)
+pd_dwi_cli.add_command(train)
+
+
+@click.group(name='pd-dwi-preprocessing')
+@click.version_option(message='version %(version)s')
+def preprocessing_cli() -> None:
+    pass
+
+
+preprocessing_cli.add_command(adc_preprocess)
