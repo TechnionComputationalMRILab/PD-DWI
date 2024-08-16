@@ -14,7 +14,7 @@ build:
       - pip install poetry==1.8.3
     post_install:
       # TODO: Change to docs group after poetry upgrade
-      - VIRTUAL_ENV=$READTHEDOCS_VIRTUALENV_PATH poetry install 
+      - VIRTUAL_ENV=$READTHEDOCS_VIRTUALENV_PATH poetry install --only=docs,main
 
 
 mkdocs:
