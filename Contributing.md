@@ -17,7 +17,7 @@
 1. Install pipx - instructions are available [here](https://github.com/pypa/pipx?tab=readme-ov-file#install-pipx)
 2. Install poetry via pipx 
    ```
-   pipx install --suffix=@1.1.11 poetry==1.1.11
+   pipx install --suffix=@1.8.3 poetry==1.8.3
    ```
 
 ### Install project
@@ -29,13 +29,13 @@
    ```
 2. Configure poetry to use python 3.8.13
    ```
-   poetry@1.1.11 env use 3.8.13
+   poetry@1.8.3 env use 3.8.13
    ```
 3. Install project dependencies 
    ```
-   poetry@1.1.11 install
+   poetry@1.8.3 install
    ```
 4. Validate installation
    ```
-   poetry@1.1.11 run pd-dwi --help
+   poetry@1.8.3 run pd-dwi --help
    ```
