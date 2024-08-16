@@ -1,12 +1,60 @@
 site_name: PD-DWI
 
+repo_url: https://github.com/technionComputationalMRILab/PD-DWI/
+
+theme:
+  name: readthedocs
+  highlightjs: true
+  include_homepage_in_sidebar: true
+
 nav:
   - Home: index.md
-  - Installation: installation.md
-  - Usage: usage.md
-  - Training Configuration: training_configuration.md
-  - Dataset Preprocessing: dataset_preprocessing.md
+  - Installation:
+      - Install Package: installation/install_package.md
+  - Usage:
+      - Getting Started: usage/index.md
+      - DWI Pre Processing: usage/pre_processing.md
+      - Model: usage/model.md
+      - Training Configuration: usage/training_configuration.md
 
-theme: readthedocs
+plugins:
+  - plotly
+  - search
+
 markdown_extensions:
+  # Python Markdown
+  - abbr
   - admonition
+  - attr_list
+  - def_list
+  - footnotes
+  - md_in_html
+  - toc:
+      permalink: true
+
+  # Python Markdown Extensions
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.betterem:
+      smart_enable: all
+  - pymdownx.caret
+  - pymdownx.details
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
+  - pymdownx.keys
+  - pymdownx.mark
+  - pymdownx.smartsymbols
+  - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.tilde
+  - mkdocs-click
+  - pymdownx.superfences:
+      custom_fences:
+        - name: plotly
+          class: mkdocs-plotly
+          format: !!python/name:mkdocs_plotly_plugin.fences.fence_plotly
+
+

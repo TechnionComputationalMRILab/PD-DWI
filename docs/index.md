@@ -2,7 +2,11 @@
 
 PD-DWI is a physiologically-decomposed Diffusion-Weighted MRI machine-learning model for predicting response to neoadjuvant chemotherapy in invasive breast cancer.
 
-PD-DWI was developed by [TCML](https://tcml-bme.github.io/) group as part of [BMMR2 challenge](https://wiki.cancerimagingarchive.net/pages/viewpage.action?pageId=89096426) using [ACRIN-6698](https://wiki.cancerimagingarchive.net/pages/viewpage.action?pageId=50135447) dataset.
+PD-DWI was developed by [TCML](https://tcml-bme.github.io/) group. 
+
+<figure markdown="span">
+    ![TCML](assets/tcml_logo.png)
+</figure>
 
 **If you publish any work which uses this package, please cite the following publication:** Gilad, M., Freiman, M. (2022). PD-DWI: Predicting Response to Neoadjuvant Chemotherapy in Invasive Breast Cancer with Physiologically-Decomposed Diffusion-Weighted MRI Machine-Learning Model. In: Wang, L., Dou, Q., Fletcher, P.T., Speidel, S., Li, S. (eds) Medical Image Computing and Computer Assisted Intervention – MICCAI 2022. MICCAI 2022. Lecture Notes in Computer Science, vol 13433. Springer, Cham. https://doi.org/10.1007/978-3-031-16437-8_4
 
@@ -11,3 +15,44 @@ PD-DWI was developed by [TCML](https://tcml-bme.github.io/) group as part of [BM
 
 !!! warning
     Not intended for clinical use. 
+
+## BMMR2 Challenge 
+
+``` plotly
+{
+    "data": [
+        {
+            "x": [
+                "Benchmark",
+                "Team C",
+                "Team B",
+                "Team A",
+                "PD-DWI"
+            ],
+            "y": [
+                0.782,
+                0.803,
+                0.838,
+                0.840,
+                0.885
+            ],
+            "marker": {
+                "color": ["rgba(136,204,238,1)", "rgba(136,204,238,1)", "rgba(136,204,238,1)", "rgba(136,204,238,1)", "rgba(204,102,119,1)"] 
+            },
+            "type": "bar"
+        }
+    ],
+    "layout": {
+        "title": "Model Performance",
+        "xaxis": { "title": "Best Performing Models" },
+        "yaxis": {
+            "title": "AUC Score",
+            "range": [
+                0.75,
+                0.9
+            ]
+        }
+    }
+}
+```
+

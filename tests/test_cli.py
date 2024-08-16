@@ -1,25 +1,27 @@
-from subprocess import run
+from click.testing import CliRunner
 
-import pytest
-
-from pd_dwi.scripts.cli import pd_dwi_cli
+from pd_dwi.scripts.cli import pd_dwi_cli, preprocessing_cli
 
 
 def test_cli_available():
-    p = run(["pd-dwi", "--help"])
-    assert not p.returncode
+    p = CliRunner().invoke(pd_dwi_cli, args=['--help'])
+    assert not p.exit_code
 
 
 def test_list():
-    pd_dwi_cli(["list"])
+    CliRunner().invoke(pd_dwi_cli, args=['list'])
 
 
 def test_invalid_command():
-    with pytest.raises(SystemExit):
-        pd_dwi_cli(["cmd"])
+    p = CliRunner().invoke(pd_dwi_cli, args=['cmd'])
+    assert p.exit_code == 2
 
 
-def test_predict(subtests):
-    with subtests.test("missing arguments"):
-        with pytest.raises(SystemExit):
-            pd_dwi_cli(["predict"])
+def test_predict():
+    p = CliRunner().invoke(pd_dwi_cli, args=['predict'])
+    assert p.exit_code == 2
+
+
+def test_preprocessing_adc():
+    p = CliRunner().invoke(preprocessing_cli, args=['adc'])
+    assert p.exit_code == 2

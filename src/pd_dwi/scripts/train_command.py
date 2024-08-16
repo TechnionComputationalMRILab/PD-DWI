@@ -1,14 +1,14 @@
+import click
+
 from pd_dwi.model import Model
 
 
-def train(args):
-    model = Model.from_config(args.config)
-    model.train(args.dataset)
-    model.save(args.out)
-
-
-def add_train_parser(parser):
-    parser.add_argument('-dataset', type=str, required=True, help='Path for dataset to use')
-    parser.add_argument('-config', type=open, required=True, help='Path for config to use')
-    parser.add_argument('-out', type=str, required=True, help='Path for storing the trained model')
-    parser.set_defaults(func=train)
+@click.command()
+@click.argument('dataset', type=click.Path(exists=True, file_okay=False))
+@click.argument('config', type=click.Path(exists=True, dir_okay=False))
+@click.argument('out', type=click.Path(exists=False))
+def train(dataset, config, out):
+    """ Train a new model. """
+    model = Model.from_config(config)
+    model.train(dataset)
+    model.save(out)
