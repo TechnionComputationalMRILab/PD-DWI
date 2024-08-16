@@ -48,11 +48,3 @@ def test_calculate_adc(mocker):
         mocker.patch('pd_dwi.preprocessing.adc.read_b_value', side_effect=b_value_mock)
 
         calculate_adc(temp_dir, b_values=b_values)
-
-
-def _adc_formula(s0, adc_model, b_value):
-    return s0 * np.exp(-b_value * adc_model)
-
-
-def _pred_pixel(s0_model, adc_model, row=0, col=0):
-    return [_adc_formula(s0_model, adc_model, b_value)[row, col] for b_value in b_vector]

@@ -12,12 +12,12 @@ from pd_dwi.preprocessing.adc import calculate_adc
                )
 @click.argument('data_path', type=click.Path(exists=True, file_okay=False))
 @click.argument('b', nargs=-1, required=True, type=click.IntRange(min=0))
-def adc_preprocess(dwi_data, b):
-    if os.path.isdir(dwi_data):
-        calculate_adc(dwi_data, set(b), dwi_data)
+def adc_preprocess(data_path, b):
+    if os.path.isdir(data_path):
+        calculate_adc(data_path, set(b), data_path)
     else:
         print("Entering bulk mode.")
-        with open(dwi_data, mode='r') as f:
+        with open(data_path, mode='r') as f:
             # Skip first line
             f.readline()
             for dwi_folder in f.readlines():
