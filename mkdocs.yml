@@ -13,6 +13,8 @@ nav:
       - Install Package: installation/install_package.md
   - Usage:
       - Getting Started: usage/index.md
+      - DWI Pre Processing: usage/pre_processing.md
+      - Model: usage/model.md
       - Training Configuration: usage/training_configuration.md
 
 plugins:

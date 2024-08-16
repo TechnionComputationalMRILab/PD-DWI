@@ -30,34 +30,14 @@ The DWI-based map can be either ADC or F, or both.
 
 To calculate the ADC and F maps from your DWI data, please use our pre-processing utility. 
 
-## ADC Calculation
-
-### Command-line Usage 
-
-This page provides documentation for command line tools.
-
-::: mkdocs-click
-    :module: pd_dwi.scripts.cli
-    :command: preprocessing_cli
-    :style: table
-
-
 ### Clinical data
 
 All clinical data will be stored in a file named _clinical.csv_. 
 Each line will contain the following values, by order of appearance: 
+
 1. Patient ID DICOM - subject identifier, must be identical to subject's folder name
 2. hrher4g - 4 level hormone receptor status
 3. SBRgrade - 3 level tumor grade 
 4. race - subject's race
 5. Ltype - lesion type
 6. pcr - pCR label of subject. If not available, should be defined as an empty string
-
-## Command-line Usage 
-
-This page provides documentation for command line tools.
-
-::: mkdocs-click
-    :module: pd_dwi.scripts.cli
-    :command: pd_dwi_cli
-    :style: table
