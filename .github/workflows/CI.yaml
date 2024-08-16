@@ -32,6 +32,25 @@ jobs:
         with:
           pytest-xml-coverage-path: ./coverage.xml
 
+  docs:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: cardinalby/export-env-action@v2
+        id: cicd_env
+        with:
+          envFile: 'github.env'
+          expand: 'true'
+      - uses: actions/setup-python@v2
+        with:
+          python-version: ${{ env.PYTHON_VERSION }}
+      - uses: abatilo/actions-poetry@v2.0.0
+        with:
+          poetry-version: ${{ env.POETRY_VERSION }}
+      - run: poetry install --no-interaction
+      - name: Build docs
+        run: poetry run mkdocs build
+
 #  build:
 #    runs-on: ubuntu-latest
 #    steps:
