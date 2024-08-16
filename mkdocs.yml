@@ -3,9 +3,9 @@ site_name: PD-DWI
 repo_url: https://github.com/technionComputationalMRILab/PD-DWI/
 
 theme:
-  name: readthedocs
-  highlightjs: true
-  include_homepage_in_sidebar: true
+  name: material
+  # highlightjs: true
+  # include_homepage_in_sidebar: true
 
 nav:
   - Home: index.md
