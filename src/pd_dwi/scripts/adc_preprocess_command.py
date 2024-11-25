@@ -11,7 +11,7 @@ from pd_dwi.preprocessing.adc import ADCMap
                     "A text file path will enable the bulk mode.",
                )
 @click.argument('data_path', type=click.Path(exists=True, file_okay=False))
-@click.argument('-b', '--b-values', 'b_values', nargs=-1, required=True, type=click.IntRange(min=0))
+@click.argument('b_values', nargs=-1, required=True, type=click.IntRange(min=0))
 def adc_preprocess(data_path, b_values):
     adc = ADCMap(b_values)
     
