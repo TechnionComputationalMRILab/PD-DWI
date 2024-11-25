@@ -15,9 +15,9 @@ def validate_min_values(ctx, self, value):
 @click.command(name='adc',
                help="Calculates an ADC from input DWI data",
                )
-@click.option('-i', '--input', 'input_data', required=True, type=click.Path(exists=True, file_okay=False))
-@click.option('-b', '--b-values', 'b_values', multiple=True, required=True, type=click.IntRange(min=0), callback=validate_min_values)
-@click.option('-o', '--output', 'output_data', required=False, type=click.Path(exists=True, file_okay=False))
+@click.option('-i', '--input', 'input_data', required=True, type=click.Path(exists=True, file_okay=False), help="Location of folder containing DWI dicom files.")
+@click.option('-b', '--b-values', 'b_values', multiple=True, required=True, type=click.IntRange(min=0), callback=validate_min_values, help="List of b-values to calculate ADC from.")
+@click.option('-o', '--output', 'output_data', required=False, type=click.Path(exists=True, file_okay=False), help="Location to save ADC at. If not provided, ADC will be saved in input folder.")
 def adc_preprocess(input_data: str, b_values: List[int], output_data:str = None):
     print(b_values)
     exit()
