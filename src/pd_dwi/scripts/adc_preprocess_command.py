@@ -1,24 +1,40 @@
 import os.path
+from typing import List
 
 import click
 
-from pd_dwi.preprocessing.adc import calculate_adc
+from pd_dwi.preprocessing.adc import ADCMap
+
+
+def validate_min_values(ctx, self, value):
+    if len(value) < 2:
+        raise click.BadParameter(f"Takes at least 2 values but {len(value)} was given", ctx=ctx, param=self)
+    return value
 
 
 @click.command(name='adc',
-               help="Calculates an ADC from input DWI sequences and saves it in DWI folder."
-                    "DATA_PATH can be used to run in either single or bulk mode."
-                    "A text file path will enable the bulk mode.",
+               help="Calculates an ADC from input DWI data",
                )
-@click.argument('data_path', type=click.Path(exists=True, file_okay=False))
-@click.argument('b', nargs=-1, required=True, type=click.IntRange(min=0))
-def adc_preprocess(data_path, b):
-    if os.path.isdir(data_path):
-        calculate_adc(data_path, set(b), data_path)
+@click.option('-i', '--input', 'input_data', required=True, type=click.Path(exists=True, file_okay=False), help="Location of folder containing DWI dicom files.")
+@click.option('-b', '--b-value', 'b_values', multiple=True, required=True, type=click.IntRange(min=0), callback=validate_min_values, help="List of b-values to calculate ADC from.")
+@click.option('-o', '--output', 'output_data', required=False, type=click.Path(exists=True, file_okay=False), help="Location to save ADC at. If not provided, ADC will be saved in input folder.")
+def adc_preprocess(input_data: str, b_values: List[int], output_data:str = None):
+    print(b_values)
+    exit()
+    if output_data is None:
+        output_data = input_data
+    
+    adc = ADCMap(b_values)
+    
+    if os.path.isdir(input_data):
+        folders = [input_data]
     else:
         print("Entering bulk mode.")
-        with open(data_path, mode='r') as f:
+        with open(input_data, mode='r') as f:
             # Skip first line
             f.readline()
-            for dwi_folder in f.readlines():
-                calculate_adc(dwi_folder, set(b), dwi_folder)
+            folders = f.readlines()
+                
+    filename = f"ADC bVals={','.join(map(str, adc.b_values))}.dcm"
+    for folder in folders:
+        adc.transform(folder, os.path.join(input_data, filename))

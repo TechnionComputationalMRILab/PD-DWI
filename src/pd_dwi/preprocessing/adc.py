@@ -1,32 +1,97 @@
+from logging import warning
 import os.path
-from operator import itemgetter
-from pathlib import Path
-from typing import Set, List, Optional
+from typing import Mapping, Optional, Set
 
 import numpy as np
-from SimpleITK import GetImageFromArray, WriteImage
 from numpy import ma
-from pydicom import dcmread
 
-from pd_dwi.utils.dcm_utils import create_file_reader, copy_metadata_from_image_series_reader, read_b_value
+from pd_dwi.dcm_utils.reader import DicomReader
+from pd_dwi.dcm_utils.tags import DicomHeader
+from pd_dwi.dcm_utils.writer import DicomWriter
 
 
-def _find_dwi_files(dwi_input_folder: str, b_values: Set[int]) -> List[str]:
-    dwi_file_paths: List[str] = []
+class ADCMap(object):
+    def __init__(self, b_values: Set[int]):
+        assert len(b_values) >= 2, "ADC calculation requires at least 2 b-values"
+        
+        self._b_values = sorted(b_values)
+        
+    @property
+    def b_values(self):
+        return self._b_values
+    
+    def transform(self, dwi_data_folder, output_file_name: Optional[str]) -> np.ndarray:
+        dwi_readers = self._load_DWI_sequences(dwi_data_folder, self._b_values)
 
-    for b_value in b_values:
-        b_value_path = os.path.join(dwi_input_folder, f'DWI-{b_value}.dcm')
+        shape = dwi_readers[self._b_values[0]].shape
+        
+        if len(shape) == 3:
+            adc_pixel_array = np.zeros(shape, dtype=np.float64)
+            for slice_idx in range(shape[0]):
+                _, slope = self._fit_slice([dwi_readers[b].pixel_array[slice_idx] for b in self._b_values])
+                adc_pixel_array[slice_idx] = slope
+        elif len(shape) == 2:
+            _, adc_pixel_array = self._fit_slice([dwi_readers[b].pixel_array for b in self._b_values])
 
-        if not os.path.exists(b_value_path):
-            raise ValueError(f"B-value `{b_value}` is not available in `{dwi_input_folder}.")
+        if output_file_name:
+            self.write(adc_pixel_array, output_file_name, dwi_readers[self._b_values[0]])
+        
+        return adc_pixel_array
+    
+    def write(self, pixel_array, output_file_name, metadata_reference_reader):
+        description = "ADC from bVals=" + ','.join(map(str, self._b_values))
+        
+        output_file_path = output_file_name
+        
+        with DicomWriter(output_file_path) as writer:
+            writer.image(pixel_array, multiply_by=1000)
+            writer.metadata_like(metadata_reference_reader)
+            writer.image_type(['DERIVED', 'PRIMARY', 'DIFFUSION', 'ADC'])
+            writer.series_description(description)
+            writer.comment('Created using Least-Squares Line Fit (matrices implementation)')
 
-        dcm = dcmread(b_value_path, stop_before_pixels=True)
-        b_value_value = read_b_value(dcm)
-        assert b_value == b_value_value
-        dwi_file_paths.append(b_value_path)
+    
+    def _fit_slice(self, dwi_observations):
+        """ Calculates linear line fit for a given slice """
 
-    return dwi_file_paths
+        num_rows, num_columns = dwi_observations[0].shape
+        num_dwi_images = len(self._b_values)
+        num_pixels = num_rows * num_columns
 
+        # variables are all non 0 b value
+        variables = -np.array(self._b_values[1:])
+        assert variables.shape == (num_dwi_images - 1,)
+
+        # observations are from non 0 b value
+        observations = np.stack([ma.log(img.flatten()).filled(0)
+                                for img in dwi_observations[1:]], axis=0)
+        assert observations.shape == (num_dwi_images - 1, num_pixels)
+
+        intercept, slope = _least_squares_line_fit(variables, observations)
+        assert slope.shape == (num_pixels,)
+
+        intercept = intercept.reshape((num_rows, num_columns))
+        slope = slope.reshape((num_rows, num_columns))
+
+        # Keep only positive slopes
+        slope = np.clip(slope, 0, None)
+
+        return intercept, slope
+
+    @staticmethod
+    def _load_DWI_sequences(dwi_data_folder: str, b_values: Set[int]) -> Mapping[str, DicomReader]:
+        def _create_and_validate(b):
+            reader = DicomReader(os.path.join(dwi_data_folder, f'DWI-{b}.dcm'))
+                                
+            if reader.HasMetaDataKey(DicomHeader.b_value):
+                assert int(reader.GetMetaData(DicomHeader.b_value)) == b
+            else:
+                warning(f'{DicomHeader.b_value} was not found in Dicom header')
+                
+            return reader
+        
+        return dict(map(lambda b: (b, _create_and_validate(b), b_values)))
+    
 
 def _least_squares_line_fit(variables: np.array, observations: np.array):
     """
@@ -49,120 +114,3 @@ def _least_squares_line_fit(variables: np.array, observations: np.array):
     intercept = np.exp(x[0][0])
     slope = x[0][1]
     return intercept, slope
-
-
-def calculate_adc_slice(b_values, dwi_observations):
-    """ Calculates linear line fit for a given slice """
-
-    num_rows, num_columns = dwi_observations[0].shape
-    num_dwi_images = len(b_values)
-    num_pixels = num_rows * num_columns
-
-    # variables are all non 0 b value
-    variables = -np.array(b_values[1:])
-    assert variables.shape == (num_dwi_images - 1,)
-
-    # observations are from non 0 b value
-    observations = np.stack([ma.log(img.flatten()).filled(0)
-                             for img in dwi_observations[1:]], axis=0)
-    assert observations.shape == (num_dwi_images - 1, num_pixels)
-
-    intercept, slope = _least_squares_line_fit(variables, observations)
-    assert slope.shape == (num_pixels,)
-
-    intercept = intercept.reshape((num_rows, num_columns))
-    slope = slope.reshape((num_rows, num_columns))
-
-    # Keep only positive slopes
-    slope = np.clip(slope, 0, None)
-
-    return intercept, slope
-
-
-def _save_adc(adc_data: np.ndarray, b_values: Set[int], dwi_ref_file_path: str, output_folder: str,
-              comments: Optional[str] = None):
-    reader = create_file_reader(dwi_ref_file_path)
-    ref_dwi_image = reader.Execute()
-
-    adc_image = GetImageFromArray(adc_data * 1000)
-    adc_image.SetSpacing(ref_dwi_image.GetSpacing())
-    adc_image.SetDirection(ref_dwi_image.GetDirection())
-    adc_image.SetOrigin(ref_dwi_image.GetOrigin())
-
-    copy_metadata_from_image_series_reader(reader, adc_image, ["0020|000e", "0020|0011", "0008|0008"])
-
-    # Image Type
-    adc_image.SetMetaData("0008|0008", reader.GetMetaData("0008|0008").replace('TRACE', 'ADC'))
-
-    # Series Number - created by removing b_value from DWI series number and 0100
-    b_value = int(reader.GetMetaData("0018|9087"))
-    base_series_number = reader.GetMetaData("0020|0011")[:-len(f'{b_value:03d}') + 4]
-    adc_image.SetMetaData("0020|0011", f'{base_series_number}0200')
-
-    # Rescale intercept
-    adc_image.SetMetaData("0028|1052", "0")
-    # Rescale Slope
-    adc_image.SetMetaData("0028|1053", "0.001")
-    # Rescale Type
-    adc_image.SetMetaData("0028|1054", "10^-3mm^2/s ")
-
-    # Series description
-    b_values_str = ','.join([str(b) for b in b_values])
-    description = f"ADC from bVals={b_values_str}"
-    adc_image.SetMetaData("0008|103e", description)
-
-    if comments:
-        adc_image.SetMetaData("0020|4000", comments)
-
-    Path(output_folder).mkdir(parents=True, exist_ok=True)
-    WriteImage(adc_image, os.path.join(output_folder, f"{description}.dcm"))
-
-
-def calculate_adc_from_files(*dwi_file_paths) -> np.ndarray:
-    """
-    Calculates ADC data from list of DWI files
-
-    :param dwi_file_paths: DWI acquisition file paths, representing the b-values to use in ADC calculation
-
-    :return: ADC data
-    """
-
-    if len(dwi_file_paths) < 2:
-        raise ValueError("At least two DWI sequences should be provided")
-
-    dwi_observations = []
-
-    for dwi_path in dwi_file_paths:
-        dcm = dcmread(dwi_path)
-        dwi_observations.append((read_b_value(dcm), dcm.pixel_array))
-
-    dwi_observations = sorted(dwi_observations, key=lambda x: x[0])
-    b_values, dwi_arrays = zip(*dwi_observations)
-
-    adc_shape = dwi_arrays[0].shape
-    adc_data = np.zeros(adc_shape, dtype=np.float64)
-    for slice_idx in range(adc_shape[0]):
-        _, slope = calculate_adc_slice(b_values, list(map(itemgetter(slice_idx), dwi_arrays)))
-        adc_data[slice_idx] = slope
-
-    return adc_data
-
-
-def calculate_adc(dwi_input_folder: str, b_values: Set[int], output_folder: Optional[str] = None) -> np.ndarray:
-    """
-    Calculates ADC data from DWI acquisition and set of input b-values
-
-    :param dwi_input_folder: Path of DWI acquisition folder
-    :param b_values: Unique array of b-values to use in ADC calculation
-    :param output_folder: Path of output folder to store calculated ADC in
-
-    :return: ADC data
-    """
-    dwi_file_paths = _find_dwi_files(dwi_input_folder, b_values)
-    adc_data = calculate_adc_from_files(*dwi_file_paths)
-
-    if output_folder:
-        _save_adc(adc_data, b_values, dwi_file_paths[0], output_folder,
-                  comments="Created using Least-Squares Line Fit (matrices implementation)")
-
-    return adc_data
