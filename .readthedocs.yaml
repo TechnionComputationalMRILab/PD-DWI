@@ -13,6 +13,7 @@ build:
     post_create_environment:
       - pip install poetry==1.1.11
     post_install:
+      - pip install --upgrade 'setuptools<71.0.0'
       # TODO: Change to docs group after poetry upgrade
       - VIRTUAL_ENV=$READTHEDOCS_VIRTUALENV_PATH poetry install 
 
