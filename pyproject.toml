@@ -72,6 +72,10 @@ mkdocs-click = "^0.8.1"
 mkdocs-material = "^9.5.28"
 termynal = "*"
 
+[tool.poetry_bumpversion.file."src/pd_dwi/__init__.py"]
+search = '__version__ = "{current_version}"'
+replace = '__version__ = "{new_version}"'
+
 [tool.mypy]
 python_version = "3.9"
 ignore_missing_imports = true
