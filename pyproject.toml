@@ -1,10 +1,7 @@
-[tool.poetry]
+[project]
 name = "pd-dwi"
-version = "1.1.4"
 description = "Physiologically-Decomposed Diffusion-Weighted MRI machine-learning model for predicting response to neoadjuvant chemotherapy in invasive breast cancer"
-authors = [
-    "Maya Gilad <ms.maya.gilad@gmail.com>"
-]
+readme = "README.md"
 classifiers = [
     "Topic :: Scientific/Engineering :: Bio-Informatics",
     "Environment :: Console",
@@ -15,21 +12,27 @@ classifiers = [
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
-    "Programming Language :: Python :: 4",
     "Development Status :: 3 - Alpha"
 ]
-readme = "README.md"
+requires-python = ">=3.8.1"
+authors = [
+    { name = "Maya Gilad", email = "ms.maya.gilad@gmail.com" },
+]
+version = "1.1.4"
+
+[project.urls]
 homepage = "https://tcml-bme.github.io/"
 repository = "https://github.com/TechnionComputationalMRILab/PD-DWI"
 documentation = "https://pd-dwi.readthedocs.io/en/stable/"
 
-[tool.poetry.scripts]
+[project.scripts]
 pd-dwi = "pd_dwi.scripts.cli:pd_dwi_cli"
 pd-dwi-preprocessing = "pd_dwi.scripts.cli:preprocessing_cli"
 
+[tool.poetry]
+requires-poetry = ">=2.1.1"
 
 [tool.poetry.dependencies]
-python = ">=3.8.1"
 Cython = "^0.29.30"
 jsonschema = "^4.6.0"
 numpy = "^1.22.0"
@@ -45,7 +48,7 @@ pydicom = "^2.4.4"
 click = "^8.1.7"
 importlib-resources = {python = ">=3.9"}
 
-[tool.poetry.dev-dependencies]
+[tool.poetry.group.dev.dependencies]
 pytest = "7.1.2"
 pytest-cov = "^4.1.0"
 pytest-mock = "^3.12.0"

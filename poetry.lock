@@ -3102,4 +3102,4 @@ preprocessing = ["pydicom"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.8.1"
-content-hash = "7f4a0e0491cdde2aba6c14b63c6e3b4221b3797b0dac995416c19cd8ae8e3036"
+content-hash = "c2d3d98a28fbdba48d61de9774265331bd1206558de41e842055782af4e84375"
