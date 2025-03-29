@@ -21,8 +21,8 @@ PD-DWI can also be installed from source code.
     Ensure the following pre-prerequisites are installed on your machine:
 
     * git
-    * python 3.8
-    * poetry 1.1.11
+    * python 3.9
+    * poetry 2.1.1
 
 1. Clone the repository
 ```console
