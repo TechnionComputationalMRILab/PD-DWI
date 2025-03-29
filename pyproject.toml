@@ -43,6 +43,7 @@ pydantic-yaml = "^1.2.1"
 StrEnum = {version = "^0.4.15", python = "<3.11"}
 pydicom = "^2.4.4"
 click = "^8.1.7"
+importlib-resources = {python = ">=3.9"}
 
 [tool.poetry.dev-dependencies]
 pytest = "7.1.2"
