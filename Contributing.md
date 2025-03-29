@@ -7,9 +7,9 @@
 #### Pyenv
 
 1. Install pyenv - instructions are available [here](https://github.com/pyenv/pyenv?tab=readme-ov-file#installation)
-2. Install python 3.8.13 via pyenv
+2. Install python 3.9.21 via pyenv
    ```
-   pyenv install 3.8.13
+   pyenv install 3.9.21
    ```
 
 #### Poetry
@@ -27,9 +27,9 @@
    git clone https://github.com/TechnionComputationalMRILab/PD-DWI.git
    cd PD-DWI 
    ```
-2. Configure poetry to use python 3.8.13
+2. Configure poetry to use python 3.9.21
    ```
-   poetry@2.1.1 env use 3.8.13
+   poetry@2.1.1 env use 3.9.21
    ```
 3. Install project dependencies 
    ```
