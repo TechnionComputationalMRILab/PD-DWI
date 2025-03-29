@@ -24,7 +24,7 @@ jobs:
       - run: pip install urllib3==1.26.15 requests-toolbelt==0.10.1
       - name: Build and publish to pypi
         run: |
-          poetry install --no-dev
+          poetry install --only=main
           poetry build --format wheel
           poetry config pypi-token.testpypi ${{ secrets.TEST_PYPI_API_TOKEN }}
           poetry config repositories.testpypi https://test.pypi.org/legacy/
