@@ -24,7 +24,7 @@ jobs:
       - uses: abatilo/actions-poetry@v2.0.0
         with:
           poetry-version: ${{ env.POETRY_VERSION }}
-      - run: poetry install --no-interaction
+      - run: poetry install --no-interaction --with=test
       - name: Run Tests
         run: poetry run pytest --cov=src --cov-report "xml:coverage.xml"
       - name: Coverage report
@@ -47,7 +47,7 @@ jobs:
       - uses: abatilo/actions-poetry@v2.0.0
         with:
           poetry-version: ${{ env.POETRY_VERSION }}
-      - run: poetry install --no-interaction
+      - run: poetry install --no-interaction --with=docs
       - name: Build docs
         run: poetry run mkdocs build
 

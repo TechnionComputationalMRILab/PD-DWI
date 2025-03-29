@@ -58,7 +58,7 @@ poetry-bumpversion = "*"
 [tool.poetry.dependencies]
 python = ">=3.8.1,<3.10"
 
-[tool.poetry.group.dev.dependencies]
+[tool.poetry.group.docs.dependencies]
 mkdocs = "^1.6.0"
 mkdocs-plotly-plugin = "^0.1.3"
 pymdown-extensions = "^10.8.1"
