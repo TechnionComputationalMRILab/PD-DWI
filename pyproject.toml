@@ -1,6 +1,6 @@
 [project]
 name = "pd-dwi"
-version = "1.1.4"
+version = "1.2"
 description = "Physiologically-Decomposed Diffusion-Weighted MRI machine-learning model for predicting response to neoadjuvant chemotherapy in invasive breast cancer"
 readme = "README.md"
 classifiers = [
